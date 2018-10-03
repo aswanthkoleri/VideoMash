@@ -53,7 +53,8 @@ def srt_to_doc(srt_file):
     return text
 
 def total_duration_of_regions(regions):
-    return sum(map(lambda (start, end): end-start, regions))
+    print(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions)))
+    return sum(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions)))
 
 def summarize(srt_file, summarizer, n_sentences, language):
     parser = PlaintextParser.from_string(srt_to_doc(srt_file), Tokenizer(language))
@@ -69,8 +70,10 @@ def summarize(srt_file, summarizer, n_sentences, language):
 
 def find_summary_regions(srt_filename, summarizer="lsa", duration=30, language="english"):
     srt_file = pysrt.open(srt_filename)
-    print(srt_file)
-    avg_subtitle_duration = total_duration_of_regions(map(srt_item_to_range, srt_file))/len(srt_file)
+    # print(srt_file)
+    avg_subtitle_duration = total_duration_of_regions(list(map(srt_item_to_range, srt_file)))/len(srt_file)
+    print("The total duration of regions = "+str(total_duration_of_regions(map(srt_item_to_range, srt_file)))+" The total length = "+ str(len(srt_file)))
+    print(avg_subtitle_duration)
     n_sentences = duration / avg_subtitle_duration
     summary = summarize(srt_file, summarizer, n_sentences, language)
     total_time = total_duration_of_regions(summary)
@@ -90,31 +93,28 @@ def find_summary_regions(srt_filename, summarizer="lsa", duration=30, language="
 
 def main():
     print("Enter the video filename")
-    video=raw_input()
+    video='v.mp4'
     print("Enter the subtitle name ")
-    subtitle=raw_input()
+    subtitle='sub.srt'
     print("Enter summarizer name ")
-    summarizerName=raw_input()
+    summarizerName='lsa'
     duration=60
     language='english'
-    srt_file = pysrt.open(subtitle)
-    print(srt_file)
-    
-    print(map(srt_item_to_range, srt_file))
-    # regions = find_summary_regions(subtitle,
-    #                                summarizer=summarizerName,
-    #                                duration=duration,
-    #                                language=language)
-    # summary = create_summary(video,regions)
-    # base, ext = os.path.splitext(video)
-    # dst = "{0}_summarized.mp4".format(base)
 
-    # summary.to_videofile(
-    #     dst, 
-    #     codec="libx264", 
-    #     temp_audiofile="temp.m4a",
-    #     remove_temp=True,
-    #     audio_codec="aac",
-    # )
+    regions = find_summary_regions(subtitle,
+                                   summarizer=summarizerName,
+                                   duration=duration,
+                                   language=language)
+    summary = create_summary(video,regions)
+    base, ext = os.path.splitext(video)
+    dst = "{0}_summarized.mp4".format(base)
+
+    summary.to_videofile(
+        dst, 
+        codec="libx264", 
+        temp_audiofile="temp.m4a",
+        remove_temp=True,
+        audio_codec="aac",
+    )
 
 main()
