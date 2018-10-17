@@ -14,9 +14,8 @@ def main(request):
         subtutleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
         
         if form.is_valid():
-            form.save()
-            print(form.save())
-            downloadURL=summarizeVideo(videoURL,subtutleURL)
+            summType = form.cleaned_data['summarizeType']
+            downloadURL=summarizeVideo(videoURL,subtutleURL,summType)
             print(downloadURL)
             return render(request,'download.html',{ 'downloadURL' : downloadURL })
     else:

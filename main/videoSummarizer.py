@@ -21,11 +21,11 @@ from sumy.summarizers.text_rank import TextRankSummarizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
 
 SUMMARIZERS = {
-    'luhn': LuhnSummarizer,
-    'edmundson': EdmundsonSummarizer,
-    'lsa': LsaSummarizer,
-    'text-rank': TextRankSummarizer,
-    'lex-rank': LexRankSummarizer
+    'LU': LuhnSummarizer,
+    'ED': EdmundsonSummarizer,
+    'LS': LsaSummarizer,
+    'TR': TextRankSummarizer,
+    'LR': LexRankSummarizer
 }
 
 # Function to concatenate the video to obtain the summary
@@ -68,6 +68,13 @@ def summarize(srt_file, summarizer, n_sentences, language):
     # Converting the srt file to a plain text document and passing in to Sumy library(The text summarization library) functions.
     print(srt_to_doc(srt_file))
     parser = PlaintextParser.from_string(srt_to_doc(srt_file), Tokenizer(language))
+    
+    # Edmunson Method
+        # summarizer = EdmundsonSummarizer()
+        # summarizer.bonus_words = ("foo")
+        # summarizer.stigma_words = ("foo")
+        # summarizer.null_words = ("foo")
+
     stemmer = Stemmer(language)
     summarizer = SUMMARIZERS[summarizer](stemmer)
     summarizer.stop_words = get_stop_words(language)
@@ -82,7 +89,7 @@ def summarize(srt_file, summarizer, n_sentences, language):
         ret.append(srt_item_to_range(item))
     return ret
 
-def find_summary_regions(srt_filename, summarizer="lsa", duration=30, language="english"):
+def find_summary_regions(srt_filename, summarizer, duration=30, language="english"):
     srt_file = pysrt.open(srt_filename)
     print(srt_file)
     # Find the average amount of time required for each subititle to be showned 
@@ -113,15 +120,15 @@ def find_summary_regions(srt_filename, summarizer="lsa", duration=30, language="
     return summary
 
 
-def summarizeVideo(videoName,subtitleName):
+def summarizeVideo(videoName,subtitleName,summType):
     # print("Enter the video filename")
     video=videoName
     # print("Enter the subtitle name ")
     subtitle=subtitleName
 
     # print("Enter summarizer name ")
-    summarizerName='lsa'
-    duration=30
+    summarizerName=summType
+    duration=60
     language='english'
     regions = find_summary_regions(subtitle,
                                    summarizer=summarizerName,

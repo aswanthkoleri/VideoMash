@@ -1,0 +1,8 @@
+*.pyc
+db.sqlite3
+
+# dotenv environment variables file
+.env
+
+venv/
+media/
