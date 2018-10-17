@@ -53,7 +53,7 @@ def srt_item_to_range(item):
 def srt_to_doc(srt_file):
     text = ''
     for index, item in enumerate(srt_file):
-        print(item.text)
+        ##print(item.text)
         if item.text.startswith("["): continue
         text += "(%d) " % index
         text += item.text.replace("\n", "").strip("...").replace(".", "").replace("?", "").replace("!", "")
@@ -61,20 +61,20 @@ def srt_to_doc(srt_file):
     return text
 
 def total_duration_of_regions(regions):
-    print(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions)))
+    #print("Total Duration : "+" "+str(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions))))
     return sum(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions)))
 
 def summarize(srt_file, summarizer, n_sentences, language):
     # Converting the srt file to a plain text document and passing in to Sumy library(The text summarization library) functions.
-    print(srt_to_doc(srt_file))
+    ##print(srt_to_doc(srt_file))
     parser = PlaintextParser.from_string(srt_to_doc(srt_file), Tokenizer(language))
     
-    # Edmunson Method
+    # Edmundson Method
         # summarizer = EdmundsonSummarizer()
         # summarizer.bonus_words = ("foo")
         # summarizer.stigma_words = ("foo")
         # summarizer.null_words = ("foo")
-
+        
     stemmer = Stemmer(language)
     summarizer = SUMMARIZERS[summarizer](stemmer)
     summarizer.stop_words = get_stop_words(language)
@@ -89,23 +89,33 @@ def summarize(srt_file, summarizer, n_sentences, language):
         ret.append(srt_item_to_range(item))
     return ret
 
-def find_summary_regions(srt_filename, summarizer, duration=30, language="english"):
+def find_summary_regions(srt_filename, summarizer, duration, language="english"):
     srt_file = pysrt.open(srt_filename)
-    print(srt_file)
+    ##print(srt_file)
     # Find the average amount of time required for each subititle to be showned 
-    avg_subtitle_duration = total_duration_of_regions(list(map(srt_item_to_range, srt_file)))/len(srt_file)
+
+    clipList = list(map(srt_item_to_range,srt_file))
+    # check the last time range
+    if(total_duration_of_regions([clipList[-1]]) < 0):
+        clipList = clipList[:-1]
+        print(clipList)
+
+    avg_subtitle_duration = total_duration_of_regions(clipList)/len(srt_file)
+
     # Find the no of sentences that will be required in the summary video
     n_sentences = duration / avg_subtitle_duration
-    print(n_sentences)
+    print("nsentance : "+str(n_sentences))
     # get the summarize video's subtitle array
     summary = summarize(srt_file, summarizer, n_sentences, language)
     # Check whether the total duration is less than the duration required for the video
     total_time = total_duration_of_regions(summary)
+    print("total_time : "+str(total_time))
     try_higher = total_time < duration
     # If the duration which we got is higher than required 
     if try_higher:
         # Then until the resultant duration is higher than the required duration run a loop in which the no of sentence is increased by 1 
         while total_time < duration:
+            print("1 : total_time : duration "+str(total_time)+" "+str(duration))
             n_sentences += 1
             summary = summarize(srt_file, summarizer, n_sentences, language)
             total_time = total_duration_of_regions(summary)
@@ -113,6 +123,7 @@ def find_summary_regions(srt_filename, summarizer, duration=30, language="englis
         # Else if  the duration which we got is lesser than required 
         # Then until the resultant duration is lesser than the required duration run a loop in which the no of sentence is increased by 1 
         while total_time > duration:
+            print("2 : total_time : duration "+str(total_time)+str(duration))
             n_sentences -= 1
             summary = summarize(srt_file, summarizer, n_sentences, language)
             total_time = total_duration_of_regions(summary)
