@@ -15,7 +15,8 @@ def main(request):
         
         if form.is_valid():
             summType = form.cleaned_data['summarizeType']
-            downloadURL=summarizeVideo(videoURL,subtutleURL,summType)
+            summarizationTime = form.cleaned_data['summarizationTime']
+            downloadURL=summarizeVideo(videoURL,subtutleURL,summType,summarizationTime)
             print(downloadURL)
             return render(request,'download.html',{ 'downloadURL' : downloadURL })
     else:

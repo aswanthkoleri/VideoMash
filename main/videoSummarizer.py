@@ -39,6 +39,7 @@ def create_summary(filename, regions):
         subclip = input_video.subclip(start, end)
         subclips.append(subclip)
         last_end = end
+
     # return the concatenated videoclip to the 
     return concatenate_videoclips(subclips)
 
@@ -61,8 +62,12 @@ def srt_to_doc(srt_file):
     return text
 
 def total_duration_of_regions(regions):
-    #print("Total Duration : "+" "+str(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions))))
-    return sum(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions)))
+    totalT=0
+    for i in range(len(regions)):
+        if(((regions[i])[1]-(regions[i])[0]) > 0):
+            totalT=totalT+(regions[i])[1]-(regions[i])[0]
+    return totalT
+    #return sum(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions)))
 
 def summarize(srt_file, summarizer, n_sentences, language):
     # Converting the srt file to a plain text document and passing in to Sumy library(The text summarization library) functions.
@@ -74,7 +79,7 @@ def summarize(srt_file, summarizer, n_sentences, language):
         # summarizer.bonus_words = ("foo")
         # summarizer.stigma_words = ("foo")
         # summarizer.null_words = ("foo")
-        
+
     stemmer = Stemmer(language)
     summarizer = SUMMARIZERS[summarizer](stemmer)
     summarizer.stop_words = get_stop_words(language)
@@ -91,20 +96,16 @@ def summarize(srt_file, summarizer, n_sentences, language):
 
 def find_summary_regions(srt_filename, summarizer, duration, language="english"):
     srt_file = pysrt.open(srt_filename)
-    ##print(srt_file)
     # Find the average amount of time required for each subititle to be showned 
 
     clipList = list(map(srt_item_to_range,srt_file))
-    # check the last time range
-    if(total_duration_of_regions([clipList[-1]]) < 0):
-        clipList = clipList[:-1]
-        print(clipList)
 
     avg_subtitle_duration = total_duration_of_regions(clipList)/len(srt_file)
 
     # Find the no of sentences that will be required in the summary video
     n_sentences = duration / avg_subtitle_duration
     print("nsentance : "+str(n_sentences))
+
     # get the summarize video's subtitle array
     summary = summarize(srt_file, summarizer, n_sentences, language)
     # Check whether the total duration is less than the duration required for the video
@@ -131,7 +132,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language="english")
     return summary
 
 
-def summarizeVideo(videoName,subtitleName,summType):
+def summarizeVideo(videoName,subtitleName,summType,summTime):
     # print("Enter the video filename")
     video=videoName
     # print("Enter the subtitle name ")
@@ -139,12 +140,15 @@ def summarizeVideo(videoName,subtitleName,summType):
 
     # print("Enter summarizer name ")
     summarizerName=summType
-    duration=60
+    duration=int(summTime)
     language='english'
     regions = find_summary_regions(subtitle,
                                    summarizer=summarizerName,
                                    duration=duration,
                                    language=language)
+    print((regions[-1])[1])
+    if((regions[-1])[1]==0):
+        regions = regions[:-1]
     summary = create_summary(video,regions)
     # Converting to video 
     base, ext = os.path.splitext(video)
