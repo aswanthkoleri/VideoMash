@@ -77,16 +77,18 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
     if(summarizer == 'ED'):
         summarizer = EdmundsonSummarizer()
 
-        with open(bonusWords,"r") as f:
+        with open(bonusWords,"r+") as f:
             bonus_wordsList = f.readlines()
-            bonus_wordsList = [x.strip() for x in bonus_wordsList] 
-        with open(stigmaWords,"r") as f:
+            bonus_wordsList = [x.strip() for x in bonus_wordsList]
+            f.close()
+        with open(stigmaWords,"r+") as f:
             stigma_wordsList = f.readlines()
             stigma_wordsList = [x.strip() for x in stigma_wordsList]
-            
+            f.close()
+
         summarizer.bonus_words = (bonus_wordsList)
         summarizer.stigma_words = (stigma_wordsList)
-        summarizer.null_words = ("foo")
+        summarizer.null_words = get_stop_words(language)
     else:
         stemmer = Stemmer(language)
         summarizer = SUMMARIZERS[summarizer](stemmer)

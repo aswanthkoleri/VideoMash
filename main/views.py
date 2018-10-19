@@ -12,6 +12,7 @@ def main(request):
         print(form)
         videoURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])
         subtutleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
+        #if bonusWordsFile and stigmaWordsFile aren't uploaded, default files will be chosen.
         bonusWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('bonusWordsFile','defaultBonusWords.txt'))
         stigmaWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('stigmaWordsFile','defaultStigmaWords.txt'))
         
