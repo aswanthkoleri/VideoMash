@@ -69,20 +69,29 @@ def total_duration_of_regions(regions):
     return totalT
     #return sum(list(map(lambda rangeValue : rangeValue[1]-rangeValue[0] , regions)))
 
-def summarize(srt_file, summarizer, n_sentences, language):
+def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords):
     # Converting the srt file to a plain text document and passing in to Sumy library(The text summarization library) functions.
     ##print(srt_to_doc(srt_file))
     parser = PlaintextParser.from_string(srt_to_doc(srt_file), Tokenizer(language))
     
-    # Edmundson Method
-        # summarizer = EdmundsonSummarizer()
-        # summarizer.bonus_words = ("foo")
-        # summarizer.stigma_words = ("foo")
-        # summarizer.null_words = ("foo")
+    if(summarizer == 'ED'):
+        summarizer = EdmundsonSummarizer()
 
-    stemmer = Stemmer(language)
-    summarizer = SUMMARIZERS[summarizer](stemmer)
-    summarizer.stop_words = get_stop_words(language)
+        with open(bonusWords,"r") as f:
+            bonus_wordsList = f.readlines()
+            bonus_wordsList = [x.strip() for x in bonus_wordsList] 
+        with open(stigmaWords,"r") as f:
+            stigma_wordsList = f.readlines()
+            stigma_wordsList = [x.strip() for x in stigma_wordsList]
+            
+        summarizer.bonus_words = (bonus_wordsList)
+        summarizer.stigma_words = (stigma_wordsList)
+        summarizer.null_words = ("foo")
+    else:
+        stemmer = Stemmer(language)
+        summarizer = SUMMARIZERS[summarizer](stemmer)
+        summarizer.stop_words = get_stop_words(language)
+
     ret = []
     # Now the the document passed is summarized and we can access the filtered sentences along with the no of sentence
     for sentence in summarizer(parser.document, n_sentences):
@@ -94,7 +103,7 @@ def summarize(srt_file, summarizer, n_sentences, language):
         ret.append(srt_item_to_range(item))
     return ret
 
-def find_summary_regions(srt_filename, summarizer, duration, language="english"):
+def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords):
     srt_file = pysrt.open(srt_filename)
     # Find the average amount of time required for each subititle to be showned 
 
@@ -107,7 +116,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language="english")
     print("nsentance : "+str(n_sentences))
 
     # get the summarize video's subtitle array
-    summary = summarize(srt_file, summarizer, n_sentences, language)
+    summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
     # Check whether the total duration is less than the duration required for the video
     total_time = total_duration_of_regions(summary)
     print("total_time : "+str(total_time))
@@ -118,7 +127,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language="english")
         while total_time < duration:
             print("1 : total_time : duration "+str(total_time)+" "+str(duration))
             n_sentences += 1
-            summary = summarize(srt_file, summarizer, n_sentences, language)
+            summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
     else:
         # Else if  the duration which we got is lesser than required 
@@ -126,13 +135,13 @@ def find_summary_regions(srt_filename, summarizer, duration, language="english")
         while total_time > duration:
             print("2 : total_time : duration "+str(total_time)+str(duration))
             n_sentences -= 1
-            summary = summarize(srt_file, summarizer, n_sentences, language)
+            summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
     # return the resulant summarized subtitle array 
     return summary
 
 
-def summarizeVideo(videoName,subtitleName,summType,summTime):
+def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWords):
     # print("Enter the video filename")
     video=videoName
     # print("Enter the subtitle name ")
@@ -145,7 +154,10 @@ def summarizeVideo(videoName,subtitleName,summType,summTime):
     regions = find_summary_regions(subtitle,
                                    summarizer=summarizerName,
                                    duration=duration,
-                                   language=language)
+                                   language=language,
+                                   bonusWords=bonusWords,
+                                   stigmaWords=stigmaWords
+                                   )
     print((regions[-1])[1])
     if((regions[-1])[1]==0):
         regions = regions[:-1]
