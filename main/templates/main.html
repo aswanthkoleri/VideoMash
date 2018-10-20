@@ -16,6 +16,8 @@
         margin-top: 20px;
     }
     </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
 </head>
 <body>
     <!-- Navbar start  -->
@@ -111,7 +113,7 @@
                 {% render_field form.summarizationTime class="input is-success is-medium"  %}
         </div>
 </div>
-<div class="columns">
+<div class="columns edmundson-options">
     <div class="column">
             <div class="field">
                     <div class="file is-medium is-success has-name is-fullwidth">
@@ -204,6 +206,22 @@ file4.onchange = function(){
     }
 };
 </script>
-<!--     -->
+<script>
+$(document).ready(function(){
+    $(".edmundson-options").hide();
+    $("#id_summarizeType").change(function(){
+        var value = $("#id_summarizeType").val();
+        console.log(value);
+        if(value=="ED"){
+            $(".edmundson-options").show();
+        }else{
+            $(".edmundson-options").hide();
+        }
+    });
+});
+    
+</script>
+
+
 
 </html>
