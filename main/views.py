@@ -10,6 +10,9 @@ def main(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         print(form)
+        print("******************")
+        print(str(request.FILES['videoFile']))
+        print("******************")
         videoURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])
         subtutleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
         print("Subt url ::: "+str(subtutleURL));
@@ -22,6 +25,7 @@ def main(request):
             videoDwldURL = form.cleaned_data['videoDwldURL']
             summType = form.cleaned_data['summarizeType']
             summarizationTime = form.cleaned_data['summarizationTime']
+            form.save()
             print(videoURL)
             downloadURL=summarizeVideo(videoURL,subtutleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL,videoDwldURL)
             print(downloadURL)

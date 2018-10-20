@@ -9,8 +9,8 @@ class Document(models.Model):
 		('ED','Edmundson'),
 	)
 	videoDwldURL = models.CharField(max_length=100,default='https://www.youtube.com/watch?v=x-gfkXu8OpI')
-	videoFile = models.FileField(upload_to='documents/')
-	subtitleFile = models.FileField(upload_to='documents/')
+	videoFile = models.FileField(upload_to='documents/',default='documents/defaultBonusWords.txt')
+	subtitleFile = models.FileField(upload_to='documents/',default='documents/defaultBonusWords.txt')
 	summarizeType = models.CharField(max_length=2,choices=SUMMARIZE_TYPES,default='LR')
 	summarizationTime = models.DecimalField(max_digits=4, decimal_places=0, default=60)
 	bonusWordsFile = models.FileField(upload_to='documents/',default='documents/defaultBonusWords.txt')

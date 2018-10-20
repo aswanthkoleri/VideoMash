@@ -38,6 +38,7 @@ def dwldVideo(videoDwldURL):
     #fetch subtitle
     caption = yt.captions.get_by_language_code('en')
     subtitle = caption.generate_srt_captions()
+
     with open(subtitlePath,"w+") as f:
         f.write(subtitle)
     #fetch video
@@ -162,7 +163,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
 
 def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWords,videoDwldURL):
 
-    sampleItem = dwldVideo(videoDwldURL)
+    #sampleItem = dwldVideo(videoDwldURL)
     # print("Enter the video filename")
     video=videoName
     # print("Enter the subtitle name ")
