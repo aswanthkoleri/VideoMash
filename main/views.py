@@ -12,6 +12,7 @@ def main(request):
         print(form)
         videoURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])
         subtutleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
+        print("Video url ::: "+str(videoURL));
         #if bonusWordsFile and stigmaWordsFile aren't uploaded, default files will be chosen.
         bonusWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('bonusWordsFile','defaultBonusWords.txt'))
         stigmaWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('stigmaWordsFile','defaultStigmaWords.txt'))
@@ -19,6 +20,7 @@ def main(request):
         if form.is_valid():
             summType = form.cleaned_data['summarizeType']
             summarizationTime = form.cleaned_data['summarizationTime']
+            print(videoURL)
             downloadURL=summarizeVideo(videoURL,subtutleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
             print(downloadURL)
             return render(request,'download.html',{ 'downloadURL' : downloadURL })
