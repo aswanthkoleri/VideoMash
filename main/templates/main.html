@@ -213,9 +213,9 @@ $(document).ready(function(){
         var value = $("#id_summarizeType").val();
         console.log(value);
         if(value=="ED"){
-            $(".edmundson-options").show();
+            $(".edmundson-options").fadeIn();
         }else{
-            $(".edmundson-options").hide();
+            $(".edmundson-options").fadeOut();
         }
     });
 });
