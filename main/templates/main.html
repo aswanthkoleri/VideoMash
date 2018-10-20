@@ -97,13 +97,16 @@
     </div>
 <div class="form-start columns "> 
         <div class="column ">
-            <div class="select is-success is-rounded is-medium">
+
+  <label class="label is-medium">Select summarization type</label>
+            <div class="select is-success is-rounded is-medium is-fullwidth">
                 {% render_field form.summarizeType  %}
             </div>
         </div>
 
         <div class="column ">
-                {% render_field form.summarizationTime class="input is-success"  %}
+                <label class="label is-medium">Enter the summary time</label>
+                {% render_field form.summarizationTime class="input is-success is-medium"  %}
         </div>
 </div>
 </div>
