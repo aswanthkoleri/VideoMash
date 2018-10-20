@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import math
+import pytube
 
 from moviepy.editor import VideoFileClip, TextClip, ImageClip, concatenate_videoclips
 
@@ -27,6 +28,22 @@ SUMMARIZERS = {
     'TR': TextRankSummarizer,
     'LR': LexRankSummarizer
 }
+
+def dwldVideo(videoDwldURL):
+    path = './media/documents/'
+    subtitlePath = path+"sampleSubtitle.srt"
+    videoPath = path+"sampleVideo.mp4"
+    
+    yt = pytube.YouTube(videoDwldURL)
+    #fetch subtitle
+    caption = yt.captions.get_by_language_code('en')
+    subtitle = caption.generate_srt_captions()
+    with open(subtitlePath,"w+") as f:
+        f.write(subtitle)
+    #fetch video
+    stream = yt.streams.filter(progressive=True, file_extension='mp4').first()
+    stream.download(output_path=path, filename="sampleVideo")
+    return videoPath,subtitlePath
 
 # Function to concatenate the video to obtain the summary
 def create_summary(filename, regions):
@@ -107,7 +124,7 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
 
 def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords):
     srt_file = pysrt.open(srt_filename)
-    # Find the average amount of time required for each subititle to be showned 
+    # Find the average amount of time required for each subtitle to be showned 
 
     clipList = list(map(srt_item_to_range,srt_file))
 
@@ -143,7 +160,9 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     return summary
 
 
-def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWords):
+def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWords,videoDwldURL):
+
+    sampleItem = dwldVideo(videoDwldURL)
     # print("Enter the video filename")
     video=videoName
     # print("Enter the subtitle name ")

@@ -8,6 +8,7 @@ class Document(models.Model):
 		('TR','Text Rank'),
 		('ED','Edmundson'),
 	)
+	videoDwldURL = models.CharField(max_length=100,default='https://www.youtube.com/watch?v=x-gfkXu8OpI')
 	videoFile = models.FileField(upload_to='documents/')
 	subtitleFile = models.FileField(upload_to='documents/')
 	summarizeType = models.CharField(max_length=2,choices=SUMMARIZE_TYPES,default='LR')
