@@ -1,3 +1,4 @@
+{% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,13 +6,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Video summarizer </title>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css'>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style>
+    .form-start {
+        margin-top : 30px;
+    }
+    </style>
 </head>
 <body>
-    <h1> Video summarizer </h1>
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="https://bulma.io">
+    <h1>Video summarizer</h1>
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+</nav>
+<form method="post" enctype="multipart/form-data">
+    
+                {% csrf_token %}
+                {% comment %} {% for field in form.visible_fields %} {% endcomment %}
+<div class="form-start columns box"> 
+                <div class="column ">
+                </div>
+                <div class="column">
+   
+                <div class="field">
+                <div class="file is-centered is-boxed is-success has-name">
+                <label class="file-label">
+                {% render_field form.videoFile class="file-input" id="file" name="resume" %}
+                <span class="file-cta">
+                <span class="file-icon">
+                <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                Upload Video File
+                </span>
+                </span>
+                <span class="file-name" id="filename">  
+                No file uploaded
+                </span>
+                </label>
+                </div>
+                </div>
+                </div>
+                <div class="column">
+   
+                <div class="field">
+                <div class="file is-centered is-boxed is-success has-name">
+                <label class="file-label">
+                {% render_field form.subtitleFile class="file-input" id="file" name="resume" %}
+                <span class="file-cta">
+                <span class="file-icon">
+                <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                Upload subtitle File
+                </span>
+                </span>
+                <span class="file-name" id="filename">  
+                No file uploaded
+                </span>
+                </label>
+                </div>
+                </div>
+                </div>
+                <div class="column">
+                </div>
+
+</div>
+                {% comment %} {{ field.errors }} {% endcomment %}
+                {% comment %} {% render_field field style="border: 2px dashed red;" placeholder=field.name %} {% endcomment %}
+                {% comment %} {{ field.help_text }} {% endcomment %}
+                {% comment %} {% endfor %} {% endcomment %}
+                {% comment %} {{ form.as_p }} {% endcomment %}
+            
+            <a class="button is-success" type="submit">Upload</a>
+   
+</form>
+
+    {% comment %} <h1> Video summarizer </h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload</button>
-    </form>
+    </form> {% endcomment %}
 </body>
+<script>
+var file = document.getElementById("file");
+file.onchange = function(){
+    if(file.files.length > 0)
+    {
+      document.getElementById('filename').innerHTML = 					file.files[0].name;
+    }
+};
+</script>
 </html>
