@@ -161,7 +161,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     return summary
 
 
-def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWords,videoDwldURL):
+def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWords):
 
     #sampleItem = dwldVideo(videoDwldURL)
     # print("Enter the video filename")
