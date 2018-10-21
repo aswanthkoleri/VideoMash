@@ -16,6 +16,9 @@
             width:100%;
             height:100px;
         }
+        .dwldButton{
+          margin-top : 10px;
+        }
     </style>
     <title>Download page </title>
 </head>
@@ -39,9 +42,11 @@
     <div class="dwld-url">
     <center>
     <h1> Click to download the summarized video </h1>
-    <a href=".{{downloadURL}}" download="summarizedVideo.mp4" target="_blank">
-    <img src="../media/documents/dwldImg.png" width="200" height="142">
+    <div class="dwldButton">
+    <a href=".{{downloadURL}}" class="button is-success is-rounded is-large is-focused" download="summarizedVideo.mp4" target="_blank">
+    Download
     </a>
+    </div>
     </center>
     </div>
 
