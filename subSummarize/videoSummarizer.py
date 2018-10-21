@@ -29,6 +29,23 @@ SUMMARIZERS = {
     'LR': LexRankSummarizer
 }
 
+def dwldVideo(videoDwldURL):
+    path = './media/documents/'
+    subtitlePath = path+"sampleSubtitle.srt"
+    videoPath = path+"sampleVideo.mp4"
+    
+    yt = pytube.YouTube(videoDwldURL)
+    #fetch subtitle
+    caption = yt.captions.get_by_language_code('en')
+    subtitle = caption.generate_srt_captions()
+
+    with open(subtitlePath,"w+") as f:
+        f.write(subtitle)
+    #fetch video
+    stream = yt.streams.filter(progressive=True, file_extension='mp4').first()
+    stream.download(output_path=path, filename="sampleVideo")
+    return videoPath,subtitlePath
+
 # Function to concatenate the video to obtain the summary
 def create_summary(filename, regions):
     subclips = []
@@ -144,13 +161,13 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     return summary
 
 
-def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWords):
+def summarizeVideo(summType,summTime,bonusWords,stigmaWords,videoDwldURL):
 
+    item = dwldVideo(videoDwldURL)
     # print("Enter the video filename")
-    video=videoName
-
+    video=item[0]
     # print("Enter the subtitle name ")
-    subtitle=subtitleName
+    subtitle=item[1]
 
     # print("Enter summarizer name ")
     summarizerName=summType

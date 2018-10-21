@@ -8,7 +8,8 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('main/',include('main.urls'))
+    path('main/',include('main.urls')),
+    path('subSummarize',include('subSummarize.urls'))
 ]
 
 urlpatterns+=staticfiles_urlpatterns()
