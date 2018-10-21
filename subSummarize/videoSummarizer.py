@@ -113,14 +113,25 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
         summarizer.stop_words = get_stop_words(language)
 
     ret = []
+    summarizedSubtitles = []
+    print()
     # Now the the document passed is summarized and we can access the filtered sentences along with the no of sentence
     for sentence in summarizer(parser.document, n_sentences):
+        print(sentence)
         # Index of the sentence
         index = int(re.findall("\(([0-9]+)\)", str(sentence))[0])
         # Using the index we determine the subtitle to be selected
         item = srt_file[index]
         # add the selected subtitle to the result array
         ret.append(srt_item_to_range(item))
+        
+    path = "./media/documents/summarizedSubtitle.srt"
+    with open(path,"w+") as sf:
+        for i in range(0,len(summarizedSubtitles)):
+            sf.write(str(summarizedSubtitles[i]))
+            sf.write("\n")
+    sf.close()
+
     return ret
 
 def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords):

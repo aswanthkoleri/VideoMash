@@ -111,7 +111,7 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
 
     path = "./media/documents/summarizedSubtitle.srt"
     with open(path,"w+") as sf:
-        for i in range(0,int(n_sentences)):
+        for i in range(0,len(summarizedSubtitles)):
             sf.write(str(summarizedSubtitles[i]))
             sf.write("\n")
     sf.close()
