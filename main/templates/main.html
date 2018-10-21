@@ -15,25 +15,58 @@
     .submit-button {
         margin-top: 20px;
     }
+    .navbar-item{
+        padding : 20px;
+    }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     
 </head>
 <body>
     <!-- Navbar start  -->
-    <section class="nav hero is-dark" >
-            <div class="hero-body">
-              <div class="container">
+{% comment %}     <section class="navbar-menu hero is-dark">
+    <div class="navbar-start">
+        <div class="navbar-item hero-body">
+            <div class="container">
                 <h1 class="title">
                   Video summarizer
                 </h1>
                 <h2 class="subtitle">
                   Summarize your video to any length.
                 </h2>
-              </div>
             </div>
-    </section>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <a class="navbar-item">Summarize from Video URL</a>
+    </div>
+    </section> {% endcomment %}
     <!-- Navbar end -->
+<nav class="navbar">
+  <div class="navbar-menu hero is-dark">
+
+    <div class="navbar-start">
+        <div class="navbar-item hero-body">
+            <div class="container">
+                <h1 class="title">
+                  Video summarizer
+                </h1>
+                <h2 class="subtitle">
+                  Summarize your video to any length.
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+            <a class="button is-success" href="/subSummarize" >Summarize from VideoURL</a>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
 <div class="container is-fluid" >
 
 <form method="post" enctype="multipart/form-data">
