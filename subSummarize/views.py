@@ -23,7 +23,7 @@ def main(request):
             # print(videoURL)
             downloadURL=summarizeVideo(summType,summarizationTime,bonusWordsURL,stigmaWordsURL,videoDwldURL)
             # print(downloadURL)
-            return render(request,'download.html',{ 'downloadURL' : downloadURL })
+            return render(request,'subdownload.html',{ 'downloadURL' : downloadURL })
     else:
         print("=========================================")
         form = DocumentForm()
