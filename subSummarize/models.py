@@ -8,7 +8,7 @@ class Document(models.Model):
 		('TR','Text Rank'),
 		('ED','Edmundson'),
 	)
-	videoDwldURL = models.CharField(max_length=100,default='https://www.youtube.com/watch?v=2iOlM9XdOYo')
+	videoDwldURL = models.CharField(max_length=100,default='https://www.youtube.com/watch?v=X0lXytdjzQo')
 	summarizeType = models.CharField(max_length=2,choices=SUMMARIZE_TYPES,default='LR')
 	summarizationTime = models.DecimalField(max_digits=4, decimal_places=0, default=60)
 	bonusWordsFile = models.FileField(upload_to='documents/',default='dummy.txt')

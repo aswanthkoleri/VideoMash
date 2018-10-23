@@ -29,12 +29,17 @@ SUMMARIZERS = {
     'LR': LexRankSummarizer
 }
 
+def progress_check(stream = None, chunk = None, file_handle = None, remaining = None):
+    #Gets the percentage of the file that has been downloaded.
+    percent = (100*(file_size-remaining))/file_size
+    print("{:00.0f}% downloaded".format(percent))
+
 def dwldVideo(videoDwldURL):
     path = './media/documents/'
     subtitlePath = path+"sampleSubtitle.srt"
     videoPath = path+"sampleVideo.mp4"
     
-    yt = pytube.YouTube(videoDwldURL)
+    yt = pytube.YouTube(videoDwldURL,on_progress_callback=progress_check)
     #fetch subtitle
     caption = yt.captions.get_by_language_code('en')
     subtitle = caption.generate_srt_captions()
@@ -43,6 +48,8 @@ def dwldVideo(videoDwldURL):
         f.write(subtitle)
     #fetch video
     stream = yt.streams.filter(progressive=True, file_extension='mp4').first()
+    global file_size
+    file_size = stream.filesize
     stream.download(output_path=path, filename="sampleVideo")
     return videoPath,subtitlePath
 
@@ -117,22 +124,18 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
     print()
     # Now the the document passed is summarized and we can access the filtered sentences along with the no of sentence
     for sentence in summarizer(parser.document, n_sentences):
-        print(sentence)
+        #print(sentence)
         # Index of the sentence
         index = int(re.findall("\(([0-9]+)\)", str(sentence))[0])
         # Using the index we determine the subtitle to be selected
         item = srt_file[index]
+
+        summarizedSubtitles.append(item)
+
         # add the selected subtitle to the result array
         ret.append(srt_item_to_range(item))
-        
-    path = "./media/documents/summarizedSubtitle.srt"
-    with open(path,"w+") as sf:
-        for i in range(0,len(summarizedSubtitles)):
-            sf.write(str(summarizedSubtitles[i]))
-            sf.write("\n")
-    sf.close()
 
-    return ret
+    return ret,summarizedSubtitles
 
 def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords):
     srt_file = pysrt.open(srt_filename)
@@ -147,7 +150,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     print("nsentance : "+str(n_sentences))
 
     # get the summarize video's subtitle array
-    summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+    [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
     # Check whether the total duration is less than the duration required for the video
     total_time = total_duration_of_regions(summary)
     print("total_time : "+str(total_time))
@@ -158,7 +161,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
         while total_time < duration:
             print("1 : total_time : duration "+str(total_time)+" "+str(duration))
             n_sentences += 1
-            summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+            [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
     else:
         # Else if  the duration which we got is lesser than required 
@@ -166,9 +169,17 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
         while total_time > duration:
             print("2 : total_time : duration "+str(total_time)+str(duration))
             n_sentences -= 1
-            summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+            [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
-    # return the resulant summarized subtitle array 
+    
+    path = "./media/documents/summarizedSubtitle.srt"
+    with open(path,"w+") as sf:
+        for i in range(0,len(summarizedSubtitles)):
+            sf.write(str(summarizedSubtitles[i]))
+            sf.write("\n")
+    sf.close()
+
+    # return the resulant summarized subtitle array
     return summary
 
 

@@ -109,14 +109,7 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
         # add the selected subtitle to the result array
         ret.append(srt_item_to_range(item))
 
-    path = "./media/documents/summarizedSubtitle.srt"
-    with open(path,"w+") as sf:
-        for i in range(0,len(summarizedSubtitles)):
-            sf.write(str(summarizedSubtitles[i]))
-            sf.write("\n")
-    sf.close()
-
-    return ret
+    return ret,summarizedSubtitles
 
 def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords):
     srt_file = pysrt.open(srt_filename)
@@ -131,7 +124,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     print("nsentance : "+str(n_sentences))
 
     # get the summarize video's subtitle array
-    summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+    [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
     # Check whether the total duration is less than the duration required for the video
     total_time = total_duration_of_regions(summary)
     print("total_time : "+str(total_time))
@@ -142,7 +135,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
         while total_time < duration:
             print("1 : total_time : duration "+str(total_time)+" "+str(duration))
             n_sentences += 1
-            summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+            [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
     else:
         # Else if  the duration which we got is lesser than required 
@@ -150,9 +143,15 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
         while total_time > duration:
             print("2 : total_time : duration "+str(total_time)+str(duration))
             n_sentences -= 1
-            summary = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+            [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
-    
+            
+    path = "./media/documents/summarizedSubtitle.srt"
+    with open(path,"w+") as sf:
+        for i in range(0,len(summarizedSubtitles)):
+            sf.write(str(summarizedSubtitles[i]))
+            sf.write("\n")
+    sf.close()
     # return the resulant summarized subtitle array
     return summary
 
