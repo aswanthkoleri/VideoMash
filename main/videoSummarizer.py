@@ -152,6 +152,14 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
             sf.write(str(summarizedSubtitles[i]))
             sf.write("\n")
     sf.close()
+
+    path = "./media/documents/summarizedSubtitleText.txt"
+    with open(path,"w+") as stf:
+        for i in range(0,len(summarizedSubtitles)):
+            stf.write(str(summarizedSubtitles[i].text))
+            stf.write("\n")
+    stf.close()
+
     # return the resulant summarized subtitle array
     return summary
 
