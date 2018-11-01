@@ -146,19 +146,24 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
             [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
             
-    path = "./media/documents/summarizedSubtitle.srt"
+    directory = "./media/documents/"+str(summarizer)
+    
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    path = os.path.join(directory,"summarizedSubtitle.srt")
     with open(path,"w+") as sf:
         for i in range(0,len(summarizedSubtitles)):
             sf.write(str(summarizedSubtitles[i]))
             sf.write("\n")
     sf.close()
 
-    path = "./media/documents/summarizedSubtitleText.txt"
-    with open(path,"w+") as stf:
-        for i in range(0,len(summarizedSubtitles)):
-            stf.write(str(summarizedSubtitles[i].text))
-            stf.write("\n")
-    stf.close()
+    #test file for finding emotions
+    # path = "./media/documents/summarizedSubtitleText.txt"
+    # with open(path,"w+") as stf:
+    #     for i in range(0,len(summarizedSubtitles)):
+    #         stf.write(str(summarizedSubtitles[i].text))
+    #         stf.write("\n")
+    # stf.close()
 
     # return the resulant summarized subtitle array
     return summary
@@ -187,9 +192,13 @@ def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWor
     if((regions[-1])[1]==0):
         regions = regions[:-1]
     summary = create_summary(video,regions)
+    
     # Converting to video 
     base, ext = os.path.splitext(video)
-    dst = "{0}_summarized.mp4".format(base)
+    print("base : "+str(base))
+    dst = "{0}_".format(base)
+    dst = dst+str(summarizerName)+"_summarized.mp4"
+    print("dst : "+str(dst))
     summary.to_videofile(
         dst, 
         codec="libx264", 
