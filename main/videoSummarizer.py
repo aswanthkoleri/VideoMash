@@ -191,6 +191,8 @@ def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWor
     print((regions[-1])[1])
     if((regions[-1])[1]==0):
         regions = regions[:-1]
+    print("regions : ")
+    print(regions)
     summary = create_summary(video,regions)
     
     # Converting to video 

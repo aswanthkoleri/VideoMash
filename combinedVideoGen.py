@@ -1,8 +1,7 @@
 import os
 from itertools import groupby
 from collections import namedtuple
-from main.videoSummarizer import *
-
+from .videoSummarizer import *
 
 def combineSubs(results,minIndex):
     Subtitle = namedtuple('Subtitle', 'number start end content')
@@ -47,7 +46,6 @@ def createSubtitleObj(summType,subtitleBasePath):
     return subs
 
 def main():
-    
     summarizers = ["LR","LS","LU","TR"]
 
     summTime = input("Enter Summarization Time : ")
@@ -58,13 +56,15 @@ def main():
     subtitleName = "./media/documents/"+str(subtitleName)+".srt"
     dummyTxt = "./media/documents/dummy.txt"
 
-    dstPathVideo = [] #currently not used
-    
+    # dstPathVideo = [] #currently not used
     #create all videos
-    for summType in summarizers:
-        dstPathVideo.append(summarizeVideo(videoName,subtitleName,summType,summTime,dummyTxt,dummyTxt))
+    # for summType in summarizers:
+    #     dstPathVideo.append(summarizeVideo(videoName,subtitleName,summType,summTime,dummyTxt,dummyTxt))
 
-    
+    temp=[]
+    for summType in summarizers:
+        temp.append(find_summary_regions(subtitleName,summType,int(summTime),'english',dummyTxt,dummyTxt))
+
     subtitleBasePath = "./media/documents/"
     results = []
     for summType in summarizers:
@@ -77,8 +77,8 @@ def main():
     print(combSubs)
     print("*******************")
 
-    path = os.path.join(subtitleBasePath,"combinedSubtitle.srt")
-    with open(path,"w+") as f:
+    pathCom = os.path.join(subtitleBasePath,"combinedSubtitle.srt")
+    with open(pathCom,"w+") as f:
         for obj in combSubs:
             f.write(obj.number+"\n")
             f.write(obj.start+" --> "+obj.end+"\n")
@@ -87,5 +87,35 @@ def main():
             f.write("\n")
     f.close()
 
-if __name__ == "__main__":
-    main()
+    #converting video into seperate clips using combined subtitles
+    regions=[]
+    srt_file = pysrt.open(pathCom)
+    for item in srt_file:
+        regions.append(srt_item_to_range(item))
+
+    print("combined subtitles, regions : ")
+    print(regions)
+    if(regions):
+        print((regions[-1])[1])
+        if((regions[-1])[1]==0):
+            regions = regions[:-1]
+
+    if(regions):
+        summary = create_summary(videoName,regions)
+    
+        #Converting to video 
+        base, ext = os.path.splitext(videoName)
+        dst = "{0}_".format(base)
+        dst = dst+"ComSummarized.mp4"
+        print("dst : "+str(dst))
+        summary.to_videofile(
+            dst, 
+            codec="libx264", 
+            temp_audiofile="temp.m4a",
+            remove_temp=True,
+            audio_codec="aac",
+        )
+    else:
+        print("cannot extract any regions!")
+
+main()
