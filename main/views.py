@@ -19,7 +19,7 @@ def main(request):
         #if bonusWordsFile and stigmaWordsFile aren't uploaded, default files will be chosen.
         bonusWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('bonusWordsFile','dummy.txt'))
         stigmaWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('stigmaWordsFile','dummy.txt'))
-        
+
         if form.is_valid():
             summType = form.cleaned_data['summarizeType']
             summarizationTime = form.cleaned_data['summarizationTime']
@@ -32,12 +32,13 @@ def main(request):
                 textRank=request.POST.get('textRank')
                 summTypes=[lexRank,lsa,luhn,textRank]
                 downloadURL=createComVideo(videoURL,subtitleURL,bonusWordsURL,summTypes)
+                return render(request,'download.html',{ 'downloadURL' : downloadURL })
             else:
                 downloadURL=summarizeVideo(videoURL,subtitleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
                 # print(downloadURL)
                 return render(request,'download.html',{ 'downloadURL' : downloadURL })
     else:
         form = DocumentForm()
-    return render(request, 'main.html', {
-        'form': form
-    })
+        return render(request, 'main.html', {
+            'form': form
+        })
