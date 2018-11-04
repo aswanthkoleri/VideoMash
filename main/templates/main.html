@@ -69,14 +69,14 @@
 
 <div class="container is-fluid" >
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" action=>
     
                 {% csrf_token %}
                 {% comment %} {% for field in form.visible_fields %} {% endcomment %}
                <div class="box">
                    <div class="message is-success">
                     <div class="message-header ">
-                            <p>Upload video and subtitles</p>
+                        <p>Upload video and subtitles</p>
                     </div>
                 </div>
 <div class="columns"> 
@@ -194,6 +194,10 @@
         <!-- {{ form.as_p }} -->
         <center>
             <button class="button submit-button is-medium is-success" type="submit">Submit</button>
+        </center>
+        <center>
+            <button class="button submit-button is-info is-rounded is-medium" name="combinedVideo" type="submit">Combined Video</button>
+            <p class="help is-info">Make combined video using all methods</p>
         </center>
 </form>
 </div>

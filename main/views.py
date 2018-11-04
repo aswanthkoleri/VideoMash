@@ -5,13 +5,15 @@ from django.core.files.storage import FileSystemStorage
 from .forms import DocumentForm
 from django.conf import settings
 from .videoSummarizer import summarizeVideo
+from .combinedVideoGen import createComVideo
+
 # Create your views here.
 def main(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         # print(form)
         videoURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])
-        subtutleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
+        subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
         # print("Subt url ::: "+str(subtutleURL));
         # print("Video url ::: "+str(videoURL));
         #if bonusWordsFile and stigmaWordsFile aren't uploaded, default files will be chosen.
@@ -23,9 +25,12 @@ def main(request):
             summarizationTime = form.cleaned_data['summarizationTime']
             form.save()
             # print(videoURL)
-            downloadURL=summarizeVideo(videoURL,subtutleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
-            # print(downloadURL)
-            return render(request,'download.html',{ 'downloadURL' : downloadURL })
+            if 'combinedVideo' in request.POST:
+                downloadURL=createComVideo(videoURL,subtitleURL,bonusWordsURL)
+            else:
+                downloadURL=summarizeVideo(videoURL,subtitleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
+                # print(downloadURL)
+                return render(request,'download.html',{ 'downloadURL' : downloadURL })
     else:
         form = DocumentForm()
     return render(request, 'main.html', {

@@ -45,21 +45,17 @@ def createSubtitleObj(summType,subtitleBasePath):
     print(subs)
     return subs
 
-def main():
+def createComVideo(videoName,subtitleName,dummyTxt):
     summarizers = ["LR","LS","LU","TR"]
-
-    summTime = input("Enter Summarization Time : ")
-    videoName = input("Enter Video Name : ")
-    subtitleName = input("Enter Subtitle filename : ") 
-    
-    videoName = "./media/documents/"+str(videoName)+".mp4"
-    subtitleName = "./media/documents/"+str(subtitleName)+".srt"
-    dummyTxt = "./media/documents/dummy.txt"
 
     # dstPathVideo = [] #currently not used
     #create all videos
     # for summType in summarizers:
     #     dstPathVideo.append(summarizeVideo(videoName,subtitleName,summType,summTime,dummyTxt,dummyTxt))
+    
+    videoTotSubtile=pysrt.open(subtitleName)
+    clipList=list(map(srt_item_to_range,videoTotSubtile))
+    summTime=total_duration_of_regions(clipList)/1.3 #taking half of subtitle's time of a video
 
     temp=[]
     for summType in summarizers:
@@ -117,5 +113,3 @@ def main():
         )
     else:
         print("cannot extract any regions!")
-
-main()
