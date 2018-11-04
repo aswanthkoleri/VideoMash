@@ -26,7 +26,12 @@ def main(request):
             form.save()
             # print(videoURL)
             if 'combinedVideo' in request.POST:
-                downloadURL=createComVideo(videoURL,subtitleURL,bonusWordsURL)
+                lexRank=request.POST.get('lexRank')
+                lsa=request.POST.get('lsa')
+                luhn=request.POST.get('luhn')
+                textRank=request.POST.get('textRank')
+                summTypes=[lexRank,lsa,luhn,textRank]
+                downloadURL=createComVideo(videoURL,subtitleURL,bonusWordsURL,summTypes)
             else:
                 downloadURL=summarizeVideo(videoURL,subtitleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
                 # print(downloadURL)

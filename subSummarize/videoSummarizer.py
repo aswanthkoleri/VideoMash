@@ -172,7 +172,11 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
             [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
     
-    path = "./media/documents/summarizedSubtitle.srt"
+    directory = "./media/documents/"+str(summarizer)
+    
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    path = os.path.join(directory,"summarizedSubtitle.srt")
     with open(path,"w+") as sf:
         for i in range(0,len(summarizedSubtitles)):
             sf.write(str(summarizedSubtitles[i]))
@@ -208,7 +212,8 @@ def summarizeVideo(summType,summTime,bonusWords,stigmaWords,videoDwldURL):
     summary = create_summary(video,regions)
     # Converting to video 
     base, ext = os.path.splitext(video)
-    dst = "{0}_summarized.mp4".format(base)
+    dst = "{0}_".format(base)
+    dst = dst+str(summarizerName)+"_summarized.mp4"
     summary.to_videofile(
         dst, 
         codec="libx264", 

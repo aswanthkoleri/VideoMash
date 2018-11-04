@@ -45,7 +45,7 @@ def createSubtitleObj(summType,subtitleBasePath):
     print(subs)
     return subs
 
-def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
+def createComVideo(videoDwldURL,dummyTxt,summTypes):
     summarizers=[]
     for item in summTypes:
         if(item):
@@ -59,7 +59,8 @@ def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
     #create all videos
     # for summType in summarizers:
     #     dstPathVideo.append(summarizeVideo(videoName,subtitleName,summType,summTime,dummyTxt,dummyTxt))
-    
+    [videoName,subtitleName]=dwldVideo(videoDwldURL)
+
     videoTotSubtile=pysrt.open(subtitleName)
     clipList=list(map(srt_item_to_range,videoTotSubtile))
     summTime=total_duration_of_regions(clipList)/1.5 #taking half of subtitle's time of a video

@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from .forms import DocumentForm
 from django.conf import settings
 from .videoSummarizer import summarizeVideo
+from .combinedVideoGen import createComVideo
 # Create your views here.
 
 def main(request):
@@ -21,9 +22,17 @@ def main(request):
             summarizationTime = form.cleaned_data['summarizationTime']
             form.save()
             # print(videoURL)
-            downloadURL=summarizeVideo(summType,summarizationTime,bonusWordsURL,stigmaWordsURL,videoDwldURL)
-            # print(downloadURL)
-            return render(request,'subdownload.html',{ 'downloadURL' : downloadURL })
+            if 'combinedVideo' in request.POST:
+                lexRank=request.POST.get('lexRank')
+                lsa=request.POST.get('lsa')
+                luhn=request.POST.get('luhn')
+                textRank=request.POST.get('textRank')
+                summTypes=[lexRank,lsa,luhn,textRank]
+                downloadURL=createComVideo(videoDwldURL,bonusWordsURL,summTypes)
+            else:
+                downloadURL=summarizeVideo(summType,summarizationTime,bonusWordsURL,stigmaWordsURL,videoDwldURL)
+                # print(downloadURL)
+                return render(request,'subdownload.html',{ 'downloadURL' : downloadURL })
     else:
         print("=========================================")
         form = DocumentForm()

@@ -18,6 +18,16 @@
     .navbar-item{
         padding : 20px;
     }
+    .combineSection{
+        margin-top : 3%;
+        margin-left : 5%;
+        margin-right : 5%;
+    }
+    .diffMethods{
+        margin-left : 15%;
+        margin-right : 15%; 
+        color : #2B7CF0;
+    }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     
@@ -152,6 +162,35 @@
         <center>
             <button class="button submit-button is-medium is-success" type="submit">Submit</button>
         </center>
+
+        <div class="box combineSection">
+            <center>
+            <div class="columns diffMethods">
+                <div class="column">
+                    <label class="checkbox">
+                    <input type="checkbox" name="lexRank" value="LR"> Lex Rank<br>
+                    </label>
+                </div>
+                <div class="column">
+                    <label class="checkbox">
+                    <input type="checkbox" name="luhn" value="LU"> Luhn<br>
+                    </label>
+                </div>
+                <div class="column">
+                    <label class="checkbox">
+                    <input type="checkbox" name="lsa" value="LS"> LSA<br>
+                    </label>
+                </div>
+                <div class="column">
+                    <label class="checkbox">
+                    <input type="checkbox" name="textRank" value="TR"> Text Rank<br>
+                    </label>
+                </div>
+            </div>
+            <button class="button submit-button is-info is-rounded is-medium" name="combinedVideo" id="combineButton" type="submit">Combined Video</button>
+            <p class="help is-info">Make combined video using different methods</p>
+            </center>
+        </div>
 </form>
 </div>
 <footer class="footer">
@@ -206,6 +245,18 @@ $(document).ready(function(){
             $(".edmundson-options").fadeIn();
         }else{
             $(".edmundson-options").fadeOut();
+        }
+    });
+});
+$(document).ready(function(){
+    $('#combineButton').click(function() {
+        checked = $("input[type=checkbox]:checked").length;
+        if(checked<2) {
+            alert("Select atleast two method");
+            return false;
+        }
+        else{
+            return true;
         }
     });
 });
