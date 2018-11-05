@@ -203,7 +203,7 @@
 
         <!-- {{ form.as_p }} -->
         <center>
-            <button class="button submit-button is-medium is-success" type="submit">Submit</button>
+            <button class="button submit-button is-medium is-success" type="submit" name="submitButton" id="submitButton">Submit</button>
         </center>
         
         <div class="box combineSection">
@@ -301,6 +301,16 @@ $(document).ready(function(){
         else{
             return true;
         }
+    });
+});
+$(document).ready(function(){
+    $('#submitButton').click(function() {
+        index = document.getElementById('filename1').innerHTML.indexOf("No file uploaded");
+        if(index != -1){
+            alert("Upload a VideoFile!");
+            return false;
+        }
+        return true;
     });
 });
 </script>

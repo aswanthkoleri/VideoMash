@@ -160,21 +160,30 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     total_time = total_duration_of_regions(summary)
     print("total_time : "+str(total_time))
     try_higher = total_time < duration
+    prev_total_time = -1
     # If the duration which we got is higher than required 
     if try_higher:
         # Then until the resultant duration is higher than the required duration run a loop in which the no of sentence is increased by 1 
         while total_time < duration:
+            if(prev_total_time==total_time):
+                print("1 : Maximum summarization time reached")
+                break
             print("1 : total_time : duration "+str(total_time)+" "+str(duration))
             n_sentences += 1
             [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+            prev_total_time=total_time
             total_time = total_duration_of_regions(summary)
     else:
         # Else if  the duration which we got is lesser than required 
         # Then until the resultant duration is lesser than the required duration run a loop in which the no of sentence is increased by 1 
         while total_time > duration:
+            if(prev_total_time==total_time):
+                print("2 : Maximum summarization time reached")
+                break
             print("2 : total_time : duration "+str(total_time)+str(duration))
             n_sentences -= 1
             [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
+            prev_total_time=total_time
             total_time = total_duration_of_regions(summary)
     
     directory = "./media/documents/"+str(summarizer)
@@ -220,7 +229,7 @@ def summarizeVideo(summType,summTime,bonusWords,stigmaWords,videoDwldURL):
     dst = "{0}_".format(base)
     dst = dst+str(summarizerName)+"_summarized.mp4"
     summary.to_videofile(
-        dst, 
+        dst,
         codec="libx264", 
         temp_audiofile="temp.m4a",
         remove_temp=True,
