@@ -13,7 +13,7 @@ import six
 def subtitle_gen(source,filename):
     print("file name ",filename) #"video."
     # source="video.mp4"
-    output="output.wav"
+    output="./media/documents/output.wav"
      # Extracting audio first
     # command = "ffmpeg -i " + source +" -c:a aac -b:a 128k output.wav"
     rate=16000

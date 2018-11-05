@@ -43,6 +43,11 @@ def dwldVideo(videoDwldURL):
     #fetch subtitle
     caption = yt.captions.get_by_language_code('en')
     subtitle = caption.generate_srt_captions()
+    regex=re.compile(r'<.*?>')
+    subtitle=regex.sub('',subtitle)
+    print("*************")
+    print(subtitle)
+    print("*************")
 
     with open(subtitlePath,"w+") as f:
         f.write(subtitle)
