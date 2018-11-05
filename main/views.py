@@ -6,14 +6,22 @@ from .forms import DocumentForm
 from django.conf import settings
 from .videoSummarizer import summarizeVideo
 from .combinedVideoGen import createComVideo
-
+from SubtitleGen.subtitle import subtitle_gen
 # Create your views here.
 def main(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         # print(form)
         videoURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])
-        subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
+        subtitleURL=""
+        flag=False
+        try:
+            if(request.FILES['subtitleFile']):
+                print("Subtitles already given")
+                subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
+        except:
+            print("No subtitles , Need to be generated")
+            flag=True
         # print("Subt url ::: "+str(subtutleURL));
         # print("Video url ::: "+str(videoURL));
         #if bonusWordsFile and stigmaWordsFile aren't uploaded, default files will be chosen.
@@ -24,6 +32,10 @@ def main(request):
             summType = form.cleaned_data['summarizeType']
             summarizationTime = form.cleaned_data['summarizationTime']
             form.save()
+            if(flag):
+                #generate subtitles parameter1 source and parameter2 file name ("video.") and srt file will be video.srt
+                subtitle_gen('.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile']),str(request.FILES['videoFile'])[:-3])
+                subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])[:-3]+'srt'
             # print(videoURL)
             if 'combinedVideo' in request.POST:
                 lexRank=request.POST.get('lexRank')

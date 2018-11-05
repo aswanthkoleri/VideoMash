@@ -9,7 +9,33 @@ import speech_recognition as sr
 import pysrt
 import six
 
-# main
+
+def subtitle_gen(source,filename):
+    print("file name ",filename) #"video."
+    # source="video.mp4"
+    output="output.wav"
+     # Extracting audio first
+    # command = "ffmpeg -i " + source +" -c:a aac -b:a 128k output.wav"
+    rate=16000
+    command = ["ffmpeg", "-y", "-i", source,
+               "-ac", str(1), "-ar", str(rate),
+               "-loglevel", "error", output]
+    # subprocess.call(command, shell=True)
+    use_shell = True if os.name == "nt" else False
+    subprocess.check_output(command, stdin=open(os.devnull), shell=use_shell)
+    # splitAudio("output.wav")
+    # Finding the speech regions based on silence
+    regions=find_speech_regions(output)
+    print(regions)
+    # Now Convert this regions to text
+    subtitles=speechToText(output,regions)
+    # Now create srt file
+    formattedSrt=srt_formatter(subtitles)
+    # save as example "video.srt"
+    dest="./media/documents/"+filename+"srt"
+    with open(dest, 'wb') as output_file:
+        output_file.write(formattedSrt.encode("utf-8"))
+
 def main():
     source="video.mp4"
     output="output.wav"
@@ -30,10 +56,10 @@ def main():
     subtitles=speechToText(output,regions)
     # Now create srt file
     formattedSrt=srt_formatter(subtitles)
+    # save as example "video.srt"
     dest="video.srt"
     with open(dest, 'wb') as output_file:
         output_file.write(formattedSrt.encode("utf-8"))
-
 
 def speechToText(output,regions):
     r=sr.Recognizer()
@@ -75,8 +101,8 @@ def srt_formatter(subtitles, padding_before=0, padding_after=0):
 def splitAudio(audioFile):
     audio=AudioSegment.from_wav(audioFile)
     print("doe")
-    chunks = split_on_silence(audio, 
-    silence_thresh=-16 
+    chunks = split_on_silence(audio,
+    silence_thresh=-16
     )
     print("Done1")
     for i, chunk in enumerate(chunks):
@@ -133,7 +159,4 @@ def find_speech_regions(filename, frame_width=4096, min_region_size=0.5, max_reg
     return regions
 
 
-main()
-   
-
-    
+# main()
