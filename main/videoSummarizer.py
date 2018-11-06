@@ -20,6 +20,8 @@ from sumy.summarizers.edmundson import EdmundsonSummarizer
 from sumy.summarizers.lsa import LsaSummarizer
 from sumy.summarizers.text_rank import TextRankSummarizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
+import nltk
+nltk.download('punkt')
 
 SUMMARIZERS = {
     'LU': LuhnSummarizer,
