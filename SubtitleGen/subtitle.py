@@ -11,7 +11,8 @@ import six
 
 
 def subtitle_gen(source,filename):
-    print("file name ",filename) #"video."
+    print("filename :",filename) #"video."
+    print("source :",source)
     # source="video.mp4"
     output="./media/documents/output.wav"
      # Extracting audio first

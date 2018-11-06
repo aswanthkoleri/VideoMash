@@ -12,13 +12,16 @@ def main(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         # print(form)
-        videoURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])
+        videoName=str(request.FILES['videoFile']).replace(' ','_')
+
+        videoURL='.'+str(settings.MEDIA_URL)+'documents/'+videoName
         subtitleURL=""
         flag=False
         try:
             if(request.FILES['subtitleFile']):
                 print("Subtitles already given")
-                subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['subtitleFile'])
+                subtitleName=str(request.FILES['subtitleFile']).replace(' ','_')
+                subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+subtitleName
         except:
             print("No subtitles , Need to be generated")
             flag=True
@@ -34,8 +37,8 @@ def main(request):
             form.save()
             if(flag):
                 #generate subtitles parameter1 source and parameter2 file name ("video.") and srt file will be video.srt
-                subtitle_gen('.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile']),str(request.FILES['videoFile'])[:-3])
-                subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES['videoFile'])[:-3]+'srt'
+                subtitle_gen('.'+str(settings.MEDIA_URL)+'documents/'+videoName,videoName[:-3])
+                subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+videoName[:-3]+'srt'
             # print(videoURL)
             if 'combinedVideo' in request.POST:
                 lexRank=request.POST.get('lexRank')
@@ -54,3 +57,4 @@ def main(request):
         return render(request, 'main.html', {
             'form': form
         })
+        
