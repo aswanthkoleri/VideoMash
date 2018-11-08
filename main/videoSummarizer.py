@@ -148,13 +148,12 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
         # Else if  the duration which we got is lesser than required 
         # Then until the resultant duration is lesser than the required duration run a loop in which the no of sentence is increased by 1 
         while total_time > duration:
-            if(prev_total_time==total_time):
-                print("2 : Maximum summarization time reached")
+            if(n_sentences<=2):
+                print("2 : Minimum summarization time reached")
                 break
             print("2 : total_time : duration "+str(total_time)+str(duration))
             n_sentences -= 1
             [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
-            prev_total_time=total_time
             total_time = total_duration_of_regions(summary)
             
     print("************ THis is summary array *********")

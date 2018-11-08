@@ -93,9 +93,11 @@ def srt_formatter(subtitles, padding_before=0, padding_after=0):
         item = pysrt.SubRipItem()
         item.index = i
         item.text = six.text_type(text)
-        item.start.seconds = max(0, start - padding_before)
-        item.end.seconds = end + padding_after
-        sub_rip_file.append(item)
+        print(item.text)
+        if(item.text):
+            item.start.seconds = max(0, start - padding_before)
+            item.end.seconds = end + padding_after
+            sub_rip_file.append(item)
     return '\n'.join(six.text_type(item) for item in sub_rip_file)
 
 
