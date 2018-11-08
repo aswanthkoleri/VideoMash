@@ -7,7 +7,7 @@ import subprocess
 import sys
 import math
 import pytube
-
+import six
 from moviepy.editor import VideoFileClip, TextClip, ImageClip, concatenate_videoclips
 
 from sumy.parsers.plaintext import PlaintextParser
@@ -113,7 +113,7 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
 
     return ret,summarizedSubtitles
 
-def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords):
+def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords,videonamepart):
     srt_file = pysrt.open(srt_filename)
     # Find the average amount of time required for each subtitle to be showned 
 
@@ -157,14 +157,41 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
             prev_total_time=total_time
             total_time = total_duration_of_regions(summary)
             
-    directory = "./media/documents/"+str(summarizer)
+    print("************ THis is summary array *********")
+    print(summary)
+    print("**********************************")
+
+    print("************************THis is summarizedSubtitles array *******************")
+    print(summarizedSubtitles)
+    print("**********************************************************")
+    # Find the duration of each subtitle and add it to the ending time of the previous subtitle
+    subs=[]
+    starting=0
+    sub_rip_file = pysrt.SubRipFile()
+    for index,item in enumerate(summarizedSubtitles):
+        newSubitem=pysrt.SubRipItem()
+        newSubitem.index=index
+        newSubitem.text=item.text        
+        # First find duration    
+        duration=summary[index][1]-summary[index][0]
+        # Then find the ending time
+        ending=starting+duration
+        newSubitem.start.seconds=starting
+        newSubitem.end.seconds=ending
+        sub_rip_file.append(newSubitem)
+        # subs.append((index,starting,ending,item.text))
+        starting=ending
     
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    path = os.path.join(directory,"summarizedSubtitle.srt")
+    print(sub_rip_file)
+    
+    # print(subs)
+
+    
+    path = videonamepart+"_summarizedSubtitle.srt"
+    print("This is the fucking path : *********************** : "+path)
     with open(path,"w+") as sf:
-        for i in range(0,len(summarizedSubtitles)):
-            sf.write(str(summarizedSubtitles[i]))
+        for i in range(0,len(sub_rip_file)):
+            sf.write(str(sub_rip_file[i]))
             sf.write("\n")
     sf.close()
 
@@ -192,26 +219,27 @@ def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWor
     summarizerName=summType
     duration=int(summTime)
     language='english'
+    base, ext = os.path.splitext(video)
+    print("base : "+str(base))
+    videonamepart = "{0}_".format(base)
+    dst = videonamepart +str(summarizerName)+"_summarized.mp4"
+    print("dst : "+str(dst))
     regions = find_summary_regions(subtitle,
                                    summarizer=summarizerName,
                                    duration=duration,
                                    language=language,
                                    bonusWords=bonusWords,
-                                   stigmaWords=stigmaWords
+                                   stigmaWords=stigmaWords,
+                                   videonamepart=videonamepart
                                    )
     print((regions[-1])[1])
     if((regions[-1])[1]==0):
         regions = regions[:-1]
     print("regions : ")
     print(regions)
-    summary = create_summary(video,regions)
     
+    summary = create_summary(video,regions)
     # Converting to video 
-    base, ext = os.path.splitext(video)
-    print("base : "+str(base))
-    dst = "{0}_".format(base)
-    dst = dst+str(summarizerName)+"_summarized.mp4"
-    print("dst : "+str(dst))
     summary.to_videofile(
         dst, 
         codec="libx264", 

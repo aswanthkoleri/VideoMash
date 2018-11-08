@@ -1,3 +1,7 @@
+# 1. Make subtitles for videos
+# 2. Combine videos in one frame
+# 3. Try to do unsupervised algo's
+
 from django.shortcuts import render,redirect
 from .models import Document
 from django.conf import settings
@@ -13,9 +17,7 @@ def main(request):
         form = DocumentForm(request.POST, request.FILES)
         # print(form)
         videoName=str(request.FILES['videoFile']).replace(' ','_')
-
         videoURL='.'+str(settings.MEDIA_URL)+'documents/'+videoName
-        subtitleURL=""
         flag=False
         try:
             if(request.FILES['subtitleFile']):
@@ -23,14 +25,13 @@ def main(request):
                 subtitleName=str(request.FILES['subtitleFile']).replace(' ','_')
                 subtitleURL='.'+str(settings.MEDIA_URL)+'documents/'+subtitleName
         except:
-            print("No subtitles , Need to be generated")
+            print("There are no subtitles!We Need to be generated")
             flag=True
         # print("Subt url ::: "+str(subtutleURL));
         # print("Video url ::: "+str(videoURL));
         #if bonusWordsFile and stigmaWordsFile aren't uploaded, default files will be chosen.
         bonusWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('bonusWordsFile','dummy.txt'))
         stigmaWordsURL='.'+str(settings.MEDIA_URL)+'documents/'+str(request.FILES.get('stigmaWordsFile','dummy.txt'))
-
         if form.is_valid():
             summType = form.cleaned_data['summarizeType']
             summarizationTime = form.cleaned_data['summarizationTime']
