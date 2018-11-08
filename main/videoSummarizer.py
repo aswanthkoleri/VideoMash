@@ -186,7 +186,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     # print(subs)
 
     
-    path = videonamepart+"_summarizedSubtitle.srt"
+    path = videonamepart+".srt"
     print("This is the fucking path : *********************** : "+path)
     with open(path,"w+") as sf:
         for i in range(0,len(sub_rip_file)):
@@ -221,15 +221,17 @@ def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWor
     base, ext = os.path.splitext(video)
     print("base : "+str(base))
     videonamepart = "{0}_".format(base)
-    dst = videonamepart +str(summarizerName)+"_summarized.mp4"
-    print("dst : "+str(dst))
+    commonName = videonamepart +str(summarizerName)+"_summarized"
+    videoUrl=commonName+".mp4"
+
+    # print("dst : "+str(dst))
     regions = find_summary_regions(subtitle,
                                    summarizer=summarizerName,
                                    duration=duration,
                                    language=language,
                                    bonusWords=bonusWords,
                                    stigmaWords=stigmaWords,
-                                   videonamepart=videonamepart
+                                   videonamepart=commonName
                                    )
     print((regions[-1])[1])
     if((regions[-1])[1]==0):
@@ -240,10 +242,10 @@ def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWor
     summary = create_summary(video,regions)
     # Converting to video 
     summary.to_videofile(
-        dst, 
+        videoUrl, 
         codec="libx264", 
         temp_audiofile="temp.m4a",
         remove_temp=True,
         audio_codec="aac",
     )
-    return dst
+    return commonName

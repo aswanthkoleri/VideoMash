@@ -50,9 +50,12 @@ def main(request):
                 downloadURL=createComVideo(videoURL,subtitleURL,bonusWordsURL,summTypes)
                 return render(request,'download.html',{ 'downloadURL' : downloadURL })
             else:
-                downloadURL=summarizeVideo(videoURL,subtitleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
+
+                URL=summarizeVideo(videoURL,subtitleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
                 # print(downloadURL)
-                return render(request,'download.html',{ 'downloadURL' : downloadURL })
+                videoURL=URL+".mp4"
+                subUrl=URL+".srt"
+                return render(request,'download.html',{ 'videoURL' : videoURL , 'subURL' : subURL })
     else:
         form = DocumentForm()
         return render(request, 'main.html', {
