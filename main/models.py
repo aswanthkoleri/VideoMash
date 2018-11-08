@@ -14,3 +14,10 @@ class Document(models.Model):
 	summarizationTime = models.DecimalField(max_digits=4, decimal_places=0, default=60)
 	bonusWordsFile = models.FileField(upload_to='documents/',default='dummy.txt')
 	stigmaWordsFile = models.FileField(upload_to='documents/',default='dummy.txt')
+
+class Weight(models.Model):
+	LR = models.FloatField()
+	LU = models.FloatField()
+	LS = models.FloatField()
+	TR = models.FloatField()
+	ED = models.FloatField()

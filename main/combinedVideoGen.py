@@ -73,6 +73,10 @@ def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
     for summType in summarizers:
         results.append(createSubtitleObj(summType,subtitleBasePath))
 
+    print("-------------------")
+    for r in results:
+        print(r)
+    print("-------------------")
     minIndex = findMin(results)
     combSubs = combineSubs(results,minIndex)
 
