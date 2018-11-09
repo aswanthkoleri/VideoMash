@@ -34,13 +34,13 @@ def findMin(results):
 def makeCorrectTime(summaryObj,videonamepart):
     summarizedSubtitles=summaryObj.summarizedSubtitles
     summary=summaryObj.summary
-    
+
     starting=0
     sub_rip_file = pysrt.SubRipFile()
     for index,item in enumerate(summarizedSubtitles):
         newSubitem=pysrt.SubRipItem()
         newSubitem.index=index
-        newSubitem.text=item.text        
+        newSubitem.text=item.text
         # First find duration
         duration=summary[index][1]-summary[index][0]
         # Then find the ending time
@@ -49,7 +49,7 @@ def makeCorrectTime(summaryObj,videonamepart):
         newSubitem.end.seconds=ending
         sub_rip_file.append(newSubitem)
         starting=ending
-        
+
     print(sub_rip_file)
 
     path = videonamepart+str(summaryObj.name)+"_summarized.srt"
@@ -80,7 +80,7 @@ def createSubtitleObj(summType,subtitleBasePath):
 
 def find_summary_regions_selected(srt_filename, summarizer, duration, language ,bonusWords, stigmaWords, videonamepart):
     srt_file = pysrt.open(srt_filename)
-    # Find the average amount of time required for each subtitle to be showned 
+    # Find the average amount of time required for each subtitle to be showned
 
     clipList = list(map(srt_item_to_range,srt_file))
 
@@ -97,9 +97,9 @@ def find_summary_regions_selected(srt_filename, summarizer, duration, language ,
     print("total_time : "+str(total_time))
     try_higher = total_time < duration
     prev_total_time = -1
-    # If the duration which we got is higher than required 
+    # If the duration which we got is higher than required
     if try_higher:
-        # Then until the resultant duration is higher than the required duration run a loop in which the no of sentence is increased by 1 
+        # Then until the resultant duration is higher than the required duration run a loop in which the no of sentence is increased by 1
         while total_time < duration:
             if(prev_total_time==total_time):
                 print("1 : Maximum summarization time reached")
@@ -110,8 +110,8 @@ def find_summary_regions_selected(srt_filename, summarizer, duration, language ,
             prev_total_time=total_time
             total_time = total_duration_of_regions(summary)
     else:
-        # Else if  the duration which we got is lesser than required 
-        # Then until the resultant duration is lesser than the required duration run a loop in which the no of sentence is increased by 1 
+        # Else if  the duration which we got is lesser than required
+        # Then until the resultant duration is lesser than the required duration run a loop in which the no of sentence is increased by 1
         while total_time > duration:
             if(n_sentences<=2):
                 print("2 : Minimum summarization time reached")
@@ -120,7 +120,7 @@ def find_summary_regions_selected(srt_filename, summarizer, duration, language ,
             n_sentences -= 1
             [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
-            
+
 
     path=videonamepart+str(summarizer)+"_summarized.srt"
     with open(path,"w+") as sf:
@@ -158,7 +158,7 @@ def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
     videoTotSubtile=pysrt.open(subtitleName)
     clipList=list(map(srt_item_to_range,videoTotSubtile))
     summTime=total_duration_of_regions(clipList)/1.7 #taking half of subtitle's time of a video
-    
+
     base, ext = os.path.splitext(videoName)
     print("base : "+str(base))
     videonamepart = "{0}_".format(base)
@@ -174,7 +174,11 @@ def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
     results = []
     for summType in summarizers:
         results.append(createSubtitleObj(summType,subtitleBasePath))
-
+    print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
+    for i in results:
+        for j in i:
+            print(j.content)
+    print("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*")
     for summObj in summarizeList:
         makeCorrectTime(summObj,videonamepart)
 

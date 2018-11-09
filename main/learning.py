@@ -1,5 +1,5 @@
 from models import Weight
-from .combinedVideoGen import createSubtitleObj
+from .combinedVideoGen import *
 from .videoSummarizer import *
 
 def combined(videoName,subtitleName,dummyTxt,summTypes):
@@ -15,11 +15,18 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
     clipList=list(map(srt_item_to_range,videoTotSubtile))
     summTime=total_duration_of_regions(clipList)
 
-    temp=[]
-    for summType in summarizers:
-        temp.append(find_summary_regions(subtitleName,summType,int(summTime),'english',dummyTxt,dummyTxt))
+    base, ext = os.path.splitext(videoName)
+    print("base : "+str(base))
+    videonamepart = "{0}_".format(base)
 
-    subtitleBasePath = "./media/documents/"
+    summarizeList=[]
+    for summType in summarizers:
+        obj=find_summary_regions_selected(subtitleName,summType,int(summTime),'english',dummyTxt,dummyTxt,videonamepart)
+        node=Summary(summType,obj[0],obj[1])
+        summarizeList.append(node)
+
+
+    subtitleBasePath = videonamepart
     results = []
     for summType in summarizers:
         results.append(createSubtitleObj(summType,subtitleBasePath))
@@ -38,17 +45,22 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
             weights.append(w.TR)
 
     MainSubtitileFrequency=[]
-    parser = PlaintextParser.from_string(srt_to_doc(videoTotSubtile), Tokenizer('english'))
-    for i in range(len(parser.document)):
-        MainSubtitileFrequency.append(0)
+    MainSubtitle=[]
+    for ob in videoTotSubtile:
+            sent=srt_to_doc([ob])
+            print("sent ",sent[4:])
+            MainSubtitle.append(sent[4:])
+            MainSubtitileFrequency.append(0)
 
 
     for i in range(0,len(results)):
         # for each result increase the frequency with the multiple of weight corresponding to summType
-        for sentence in results[i]:
+        for obj in results[i]:
             # if this sentence is there then find its location in Main sub and store in loc
-            loc=0
-            MainSubtitileFrequency[loc]=MainSubtitileFrequency+weights[i]
+            for i in range(len(MainSubtitle)):
+                if(MainSubtitle[i]==obj.content[0]):
+                    loc=i
+                    MainSubtitileFrequency[loc]=MainSubtitileFrequency+weights[i]
 
     type_freq=[]
     for _ in summarizers:
@@ -59,8 +71,10 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
         if(frequency!=0):
             for i in range(len(results)):
                 #check if that index is present in result[i]
-                if(True):
-                    type_freq[i]=type_freq[i]+1
+                for j in i:
+                    if(MainSubtitle[index]==j.content[0]):
+                        type_freq[i]=type_freq[i]+1
+        index=index+1
 
     max_weight_index=type_freq.index(max(type_freq))
 
