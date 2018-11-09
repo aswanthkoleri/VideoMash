@@ -9,25 +9,28 @@ class Summary(object):
         self.summary = summary
         self.summarizedSubtitles = summarizedSubtitles
 
-def combineSubs(results,minIndex):
-    Subtitle = namedtuple('Subtitle', 'number start end content')
-    combSubs = [] #combined video subtitles
-    for obj in results[minIndex]:
+def combineSubs(summarizeList,minIndex):
+    combSubs=[] #combined video subtitles
+    combRegions=[]
+    for index,item in enumerate(summarizeList[minIndex].summarizedSubtitles):
         hit=1
-        for i in range(0,len(results)):
-            if obj not in results[i]:
+        for i in range(0,len(summarizeList)):
+            if(i==minIndex):
+                continue
+            if(item not in summarizeList[i].summarizedSubtitles):
                 hit=0
                 break
         if(hit):
-            combSubs.append(obj)
-    return combSubs
+            combSubs.append(item)
+            combRegions.append(srt_item_to_range(item))
+    return combSubs,combRegions
 
-def findMin(results):
-    minimum = len(results[0])
+def findMin(summarizeList):
+    minimum = len(summarizeList[0].summary)
     minIndex = 0
-    for i in range(1,len(results)):
-        if(len(results[i]) < minimum):
-            minimum = len(results[i])
+    for i in range(1,len(summarizeList)):
+        if(len(summarizeList[i].summary) < minimum):
+            minimum = len(summarizeList[i].summary)
             minIndex = i
     return minIndex
 
@@ -58,25 +61,6 @@ def makeCorrectTime(summaryObj,videonamepart):
             sf.write(str(sub_rip_file[i]))
             sf.write("\n")
     sf.close()
-
-def createSubtitleObj(summType,subtitleBasePath):
-    totPath = subtitleBasePath+str(summType)+"_summarized.srt"
-    with open(totPath) as f:
-        res = [list(g) for b,g in groupby(f, lambda x: bool(x.strip())) if b]
-    f.close()
-
-    Subtitle = namedtuple('Subtitle', 'number start end content')
-    subs = []
-    for sub in res:
-        if len(sub) >= 3: #not strictly necessary
-            sub = [x.strip() for x in sub]
-            number, start_end, *content = sub # py3 syntax
-            start, end = start_end.split(' --> ')
-            subs.append(Subtitle(number, start, end, content))
-    print()
-    print("Result of "+str(summType)+" : ")
-    print(subs)
-    return subs
 
 def find_summary_regions_selected(srt_filename, summarizer, duration, language ,bonusWords, stigmaWords, videonamepart):
     srt_file = pysrt.open(srt_filename)
@@ -167,53 +151,37 @@ def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
     summarizeList=[]
     for summType in summarizers:
         obj=find_summary_regions_selected(subtitleName,summType,int(summTime),'english',dummyTxt,dummyTxt,videonamepart)
+        print("------------------")
+        print(obj[1])
+        print("------------------")
         node=Summary(summType,obj[0],obj[1])
         summarizeList.append(node)
-
-    subtitleBasePath = videonamepart
-    results = []
-    for summType in summarizers:
-        results.append(createSubtitleObj(summType,subtitleBasePath))
 
     for summObj in summarizeList:
         makeCorrectTime(summObj,videonamepart)
 
-    print("-------------------")
-    for r in results:
-        print(r)
-    print("-------------------")
-    minIndex = findMin(results)
-    combSubs = combineSubs(results,minIndex)
+    minIndex = findMin(summarizeList)
+    [combSubs,combRegions] = combineSubs(summarizeList,minIndex)
 
     print("*******************")
     print(combSubs)
     print("*******************")
 
-    pathCom = videonamepart+"_combined.srt"
-    with open(pathCom,"w+") as f:
-        for obj in combSubs:
-            f.write(obj.number+"\n")
-            f.write(obj.start+" --> "+obj.end+"\n")
-            for line in obj.content:
-                f.write(line+"\n")
-            f.write("\n")
-    f.close()
+    node=Summary("Combined",combRegions,combSubs)
+    makeCorrectTime(node,videonamepart)
 
     #converting video into seperate clips using combined subtitles
-    regions=[]
-    srt_file = pysrt.open(pathCom)
-    for item in srt_file:
-        regions.append(srt_item_to_range(item))
+    combSubtitleName=videonamepart+"Combined_summarized.srt"
 
     print("combined subtitles, regiosummarizersns : ")
-    print(regions)
-    if(regions):
-        print((regions[-1])[1])
-        if((regions[-1])[1]==0):
-            regions = regions[:-1]
+    print(combRegions)
+    if(combRegions):
+        print((combRegions[-1])[1])
+        if((combRegions[-1])[1]==0):
+            combRegions = combRegions[:-1]
 
-    if(regions):
-        summary = create_summary(videoName,regions)
+    if(combRegions):
+        summary = create_summary(videoName,combRegions)
 
         #Converting to video
         base, ext = os.path.splitext(videoName)
@@ -227,6 +195,6 @@ def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
             remove_temp=True,
             audio_codec="aac",
         )
-        return dst,pathCom
+        return dst,combSubtitleName
     else:
         print("cannot extract any regions!")
