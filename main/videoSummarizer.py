@@ -240,7 +240,7 @@ def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWor
     print(regions)
     
     summary = create_summary(video,regions)
-    # Converting to video 
+    # Converting to video
     summary.to_videofile(
         videoUrl, 
         codec="libx264", 

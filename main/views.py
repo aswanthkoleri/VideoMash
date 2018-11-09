@@ -47,14 +47,14 @@ def main(request):
                 luhn=request.POST.get('luhn')
                 textRank=request.POST.get('textRank')
                 summTypes=[lexRank,lsa,luhn,textRank]
-                downloadURL=createComVideo(videoURL,subtitleURL,bonusWordsURL,summTypes)
-                return render(request,'download.html',{ 'downloadURL' : downloadURL })
+                [videoURL,subURL]=createComVideo(videoURL,subtitleURL,bonusWordsURL,summTypes)
+                return render(request,'download.html',{ 'videoURL' : videoURL , 'subURL' : subURL })
             else:
 
                 URL=summarizeVideo(videoURL,subtitleURL,summType,summarizationTime,bonusWordsURL,stigmaWordsURL)
                 # print(downloadURL)
                 videoURL=URL+".mp4"
-                subUrl=URL+".srt"
+                subURL=URL+".srt"
                 return render(request,'download.html',{ 'videoURL' : videoURL , 'subURL' : subURL })
     else:
         form = DocumentForm()
