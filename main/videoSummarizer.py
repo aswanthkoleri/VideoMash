@@ -103,9 +103,9 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
     # for sentence in parser.document:
     #     print("sentence ",sentence)
     # print("cod ",srt_file)
-    for ob in srt_file:
-            sent=srt_to_doc([ob])
-            print("sent ",sent[4:])
+    # for ob in srt_file:
+    #         sent=srt_to_doc([ob])
+    #         print("sent ",sent[4:])
 
     for sentence in summarizer(parser.document, n_sentences):
         # Index of the sentence
@@ -195,7 +195,6 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
 
 
     path = videonamepart+".srt"
-    print("This is the fucking path : *********************** : "+path)
     with open(path,"w+") as sf:
         for i in range(0,len(sub_rip_file)):
             sf.write(str(sub_rip_file[i]))

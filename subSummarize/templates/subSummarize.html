@@ -25,12 +25,12 @@
     }
     .diffMethods{
         margin-left : 15%;
-        margin-right : 15%; 
+        margin-right : 15%;
         color : #2B7CF0;
     }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    
+
 </head>
 <body>
     <!-- Navbar start  -->
@@ -76,7 +76,7 @@
 <div class="container is-fluid" >
 
 <form method="post" enctype="multipart/form-data">
-    
+
                 {% csrf_token %}
                 {% comment %} {% for field in form.visible_fields %} {% endcomment %}
         <div class="box">
@@ -85,7 +85,7 @@
                                         <p>Input Video URL</p>
                                 </div>
                         </div>
-                        
+
                         <div class="columns">
                         <div class="column">
                         <label class="label is-medium">Video URL : </label>
@@ -98,8 +98,8 @@
                 <p>Settings</p>
                 </div>
                 </div>
-                
-                <div class="columns "> 
+
+                <div class="columns ">
                 <div class="column ">
                         <label class="label is-medium">Select summarization type</label>
                         <div class="select is-success is-rounded is-medium is-fullwidth">
@@ -126,14 +126,14 @@
                     Upload Bonus words File
                     </span>
                     </span>
-                    <span class="file-name" id="filename3">  
+                    <span class="file-name" id="filename3">
                     No file uploaded
                     </span>
                     </label>
                     </div>
                 </div>
                 </div>
-                
+
                 <div class="column">
                 <div class="field">
                     <div class="file is-medium is-success has-name is-fullwidth">
@@ -147,7 +147,7 @@
                     Upload Stigma words File
                     </span>
                     </span>
-                    <span class="file-name" id="filename4">  
+                    <span class="file-name" id="filename4">
                     No file uploaded
                     </span>
                     </label>
@@ -187,6 +187,18 @@
                     </label>
                 </div>
             </div>
+            <div class="columns diffMethods">
+                <div class="column">
+                    <label class="radiobox">
+                    <input type="radio" name="weights" value="weights">Weighted<br>
+                    </label>
+                </div>
+                <div class="column">
+                    <label class="radiobox">
+                    <input type="radio" name="normal" value="normal">Non-Weighted<br>
+                    </label>
+                </div>
+            </div>
             <button class="button submit-button is-info is-rounded is-medium" name="combinedVideo" id="combineButton" type="submit">Combined Video</button>
             <p class="help is-info">Make combined video using different methods</p>
             </center>
@@ -196,8 +208,8 @@
 <footer class="footer">
         <div class="content has-text-centered">
           <p>
-            <strong>Video Summarizer </strong> by <a href="https://jgthms.com">Aswanth ,Druval, Aswin, Anupam and Parag</a>. The source code is licensed
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+            <!-- <strong>Video Summarizer </strong> by <a href="https://jgthms.com">Aswanth ,Druval, Aswin, Anupam and Parag</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. -->
           </p>
         </div>
       </footer>

@@ -125,6 +125,7 @@ def find_summary_regions_selected(srt_filename, summarizer, duration, language ,
     return summary,summarizedSubtitles
 
 def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
+    print("Non Weighted Algorithm")
     summarizers=[]
     for item in summTypes:
         if(item):

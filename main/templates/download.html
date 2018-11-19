@@ -41,7 +41,12 @@
 
     <div class="dwld-url">
     <center>
+    {% ifequal best "none" %}
+    {% else %}
+    <h2> {{best}} have more contribution in the summarized video and {{worst}} have the least contribution amomg all </h2>
+    {% endifequal %}
     <h1> Click to download the summarized video </h1>
+
     <div class="dwldButton">
     <a href=".{{videoURL}}" class="button is-success is-rounded is-large is-focused" download="summarizedVideo.mp4" target="_blank">
     Download video
@@ -57,8 +62,8 @@
     <footer class="footer">
         <div class="content has-text-centered">
           <p>
-            <strong>Video Summarizer </strong> by <a href="https://jgthms.com">Aswanth ,Druval, Aswin, Anupam and Parag</a>. The source code is licensed
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+            <!-- <strong>Video Summarizer </strong> by <a href="https://jgthms.com">Aswanth ,Druval, Aswin, Anupam and Parag</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. -->
           </p>
         </div>
     </footer>

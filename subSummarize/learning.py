@@ -1,8 +1,9 @@
-from .models import Weight
-from .combinedVideoGen import *
-from .videoSummarizer import *
+from main.models import Weight
+from main.combinedVideoGen import *
+from main.videoSummarizer import *
+from .videoSummarizer import dwldVideo
 
-def combined(videoName,subtitleName,dummyTxt,summTypes):
+def combined(videoDwldURL,dummyTxt,summTypes):
     print("Weighted Algorithm")
     summarizers=[]
     for item in summTypes:
@@ -11,6 +12,8 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
             summarizers.append(item)
 
     print(summarizers)
+
+    [videoName,subtitleName]=dwldVideo(videoDwldURL)
 
     videoTotSubtile=pysrt.open(subtitleName)
     clipList=list(map(srt_item_to_range,videoTotSubtile))

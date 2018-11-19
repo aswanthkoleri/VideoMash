@@ -6,6 +6,7 @@ from .forms import DocumentForm
 from django.conf import settings
 from .videoSummarizer import summarizeVideo
 from .combinedVideoGen import createComVideo
+from .learning import *
 # Create your views here.
 
 def main(request):
@@ -28,8 +29,13 @@ def main(request):
                 luhn=request.POST.get('luhn')
                 textRank=request.POST.get('textRank')
                 summTypes=[lexRank,lsa,luhn,textRank]
-                downloadURL=createComVideo(videoDwldURL,bonusWordsURL,summTypes)
-                return render(request,'subdownload.html',{ 'downloadURL' : downloadURL })
+                best="none"
+                worst="none"
+                if(request.POST.get('weights')=='weights'):
+                    [downloadURL,subURL,best,worst]=combined(videoDwldURL,bonusWordsURL,summTypes)
+                else:
+                    [downloadURL,subURL]=createComVideo(videoDwldURL,bonusWordsURL,summTypes)
+                return render(request,'subdownload.html',{ 'downloadURL' : downloadURL,'best':best,'worst':worst})
             else:
                 downloadURL=summarizeVideo(summType,summarizationTime,bonusWordsURL,stigmaWordsURL,videoDwldURL)
                 # print(downloadURL)

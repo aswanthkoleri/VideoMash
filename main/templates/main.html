@@ -25,12 +25,12 @@
     }
     .diffMethods{
         margin-left : 15%;
-        margin-right : 15%; 
+        margin-right : 15%;
         color : #2B7CF0;
     }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    
+
 </head>
 <body>
     <!-- Navbar start  -->
@@ -80,7 +80,7 @@
 <div class="container is-fluid" >
 
 <form method="post" enctype="multipart/form-data">
-    
+
                 {% csrf_token %}
                 {% comment %} {% for field in form.visible_fields %} {% endcomment %}
                <div class="box">
@@ -89,12 +89,12 @@
                         <p>Upload video and subtitles</p>
                     </div>
                 </div>
-<div class="columns"> 
-    
+<div class="columns">
+
                 <div class="column ">
                 </div>
                 <div class="column">
-   
+
                 <div class="field">
                 <div class="file is-centered is-boxed is-success has-name">
                 <label class="file-label">
@@ -107,7 +107,7 @@
                 Upload Video File
                 </span>
                 </span>
-                <span class="file-name" id="filename1">  
+                <span class="file-name" id="filename1">
                 No file uploaded
                 </span>
                 </label>
@@ -128,7 +128,7 @@
                         Upload subtitle File
                         </span>
                         </span>
-                        <span class="file-name" id="filename2">  
+                        <span class="file-name" id="filename2">
                         No file uploaded
                         </span>
                         </label>
@@ -143,7 +143,7 @@
                 <p>Settings</p>
         </div>
     </div>
-<div class="columns "> 
+<div class="columns ">
         <div class="column ">
 
   <label class="label is-medium">Select summarization type</label>
@@ -170,7 +170,7 @@
                     Upload Bonus words File
                     </span>
                     </span>
-                    <span class="file-name" id="filename3">  
+                    <span class="file-name" id="filename3">
                     No file uploaded
                     </span>
                     </label>
@@ -190,7 +190,7 @@
                     Upload Stigma words File
                     </span>
                     </span>
-                    <span class="file-name" id="filename4">  
+                    <span class="file-name" id="filename4">
                     No file uploaded
                     </span>
                     </label>
@@ -205,7 +205,7 @@
         <center>
             <button class="button submit-button is-medium is-success" type="submit" name="submitButton" id="submitButton">Submit</button>
         </center>
-        
+
         <div class="box combineSection">
             <center>
             <div class="columns diffMethods">
@@ -230,6 +230,18 @@
                     </label>
                 </div>
             </div>
+            <div class="columns diffMethods">
+                <div class="column">
+                    <label class="radiobox">
+                    <input type="radio" name="weights" value="weights">Weighted<br>
+                    </label>
+                </div>
+                <div class="column">
+                    <label class="radiobox">
+                    <input type="radio" name="normal" value="normal">Non-Weighted<br>
+                    </label>
+                </div>
+            </div>
             <button class="button submit-button is-info is-rounded is-medium" name="combinedVideo" id="combineButton" type="submit">Combined Video</button>
             <p class="help is-info">Make combined video using different methods</p>
             </center>
@@ -239,8 +251,8 @@
 <footer class="footer">
         <div class="content has-text-centered">
           <p>
-            <strong>Video Summarizer </strong> by <a href="https://jgthms.com">Aswanth ,Druval, Aswin, Anupam and Parag</a>. The source code is licensed
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+            <!-- <strong>Video Summarizer </strong> by <a href="https://jgthms.com">Aswanth ,Druval, Aswin, Anupam and Parag</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. -->
           </p>
         </div>
       </footer>
