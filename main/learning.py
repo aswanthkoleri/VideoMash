@@ -98,9 +98,9 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
     type_freq=[]
     for _ in summarizers:
         type_freq.append(0)
-    print("--------------")
-    print(MainSubtitileFrequency)
-    print("--------------")
+    # print("--------------")
+    # print(MainSubtitileFrequency)
+    # print("--------------")
     index=0
     for frequency in MainSubtitileFrequency:
         if(frequency!=0):
@@ -119,8 +119,8 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
     max_weight_index=type_freq.index(max(type_freq))
     min_weight_index=type_freq.index(min(type_freq))
     ## update weight accordingly
-    weights[max_weight_index]=weights[max_weight_index]+0.05
-    weights[min_weight_index]=weights[min_weight_index]-0.05
+    weights[max_weight_index]=weights[max_weight_index]+0.005
+    weights[min_weight_index]=weights[min_weight_index]-0.005
     best=""
     worst=""
     if(max_weight_index==0):
