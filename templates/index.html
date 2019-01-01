@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,7 @@
                       <div class="container">
                         <div class="navbar-brand">
                           <a class="navbar-item">
-                            <img src="logo/icon-left-font-monochrome-white.svg" alt="Logo">
+                            <img src="{% static "videoSummarizer/logo/icon-left-font-monochrome-white.svg" %}" alt="Logo">
                           </a>
                           <span class="navbar-burger burger" data-target="navbarMenuHeroB">
                             <span></span>
@@ -48,7 +49,7 @@
         <div class="hero-body">
           <div class="container">
             <p class="title has-text-centered is-1">
-              <img src="logo/icon-left-font-monochrome-white.svg">
+              <img src="{% static "videoSummarizer/logo/icon-left-font-monochrome-white.svg" %}">
             </p>
             <p class="subtitle is-3 has-text-centered">
               Summarize your video to any duration.
