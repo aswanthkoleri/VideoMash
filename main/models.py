@@ -6,7 +6,6 @@ class Document(models.Model):
 		('LU','Luhn'),
 		('LS','LSA'),
 		('TR','Text Rank'),
-		('ED','Edmundson'),
 	)
 	videoFile = models.FileField(upload_to='documents/',default='dummy.txt')
 	subtitleFile = models.FileField(upload_to='documents/',default='dummy.txt')
@@ -20,4 +19,3 @@ class Weight(models.Model):
 	LU = models.FloatField()
 	LS = models.FloatField()
 	TR = models.FloatField()
-	ED = models.FloatField()

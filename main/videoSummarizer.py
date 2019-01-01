@@ -43,17 +43,17 @@ def create_summary(filename, regions):
         subclips.append(subclip)
         last_end = end
 
-    # return the concatenated videoclip to the 
+    # return the concatenated videoclip to the
     return concatenate_videoclips(subclips)
 
-# Function to find the range of the subtitles in seconds 
+# Function to find the range of the subtitles in seconds
 def srt_item_to_range(item):
     start_s = item.start.hours*60*60 + item.start.minutes*60 + item.start.seconds + item.start.milliseconds/1000.
     end_s = item.end.hours*60*60 + item.end.minutes*60 + item.end.seconds + item.end.milliseconds/1000.
     return start_s, end_s
 
 # Function to convert srt file to document in such a way that each sentence starts with '(sentence no)'
-# It also removes all the unwanted stray elements in the srt file 
+# It also removes all the unwanted stray elements in the srt file
 def srt_to_doc(srt_file):
     text = ''
     for index, item in enumerate(srt_file):
@@ -76,7 +76,7 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
     # Converting the srt file to a plain text document and passing in to Sumy library(The text summarization library) functions.
     ##print(srt_to_doc(srt_file))
     parser = PlaintextParser.from_string(srt_to_doc(srt_file), Tokenizer(language))
-    
+
     if(summarizer == 'ED'):
         summarizer = EdmundsonSummarizer()
 
@@ -100,12 +100,20 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
     ret = []
     summarizedSubtitles = []
     # Now the the document passed is summarized and we can access the filtered sentences along with the no of sentence
+    # for sentence in parser.document:
+    #     print("sentence ",sentence)
+    # print("cod ",srt_file)
+    # for ob in srt_file:
+    #         sent=srt_to_doc([ob])
+    #         print("sent ",sent[4:])
+
     for sentence in summarizer(parser.document, n_sentences):
         # Index of the sentence
+        # print("sentence ",sentence)
         index = int(re.findall("\(([0-9]+)\)", str(sentence))[0])
         # Using the index we determine the subtitle to be selected
         item = srt_file[index]
-
+        # print("item ",item)
         summarizedSubtitles.append(item)
 
         # add the selected subtitle to the result array
@@ -115,7 +123,7 @@ def summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWor
 
 def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWords,stigmaWords,videonamepart):
     srt_file = pysrt.open(srt_filename)
-    # Find the average amount of time required for each subtitle to be showned 
+    # Find the average amount of time required for each subtitle to be showned
 
     clipList = list(map(srt_item_to_range,srt_file))
 
@@ -132,9 +140,9 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     print("total_time : "+str(total_time))
     try_higher = total_time < duration
     prev_total_time = -1
-    # If the duration which we got is higher than required 
+    # If the duration which we got is higher than required
     if try_higher:
-        # Then until the resultant duration is higher than the required duration run a loop in which the no of sentence is increased by 1 
+        # Then until the resultant duration is higher than the required duration run a loop in which the no of sentence is increased by 1
         while total_time < duration:
             if(prev_total_time==total_time):
                 print("1 : Maximum summarization time reached")
@@ -145,8 +153,8 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
             prev_total_time=total_time
             total_time = total_duration_of_regions(summary)
     else:
-        # Else if  the duration which we got is lesser than required 
-        # Then until the resultant duration is lesser than the required duration run a loop in which the no of sentence is increased by 1 
+        # Else if  the duration which we got is lesser than required
+        # Then until the resultant duration is lesser than the required duration run a loop in which the no of sentence is increased by 1
         while total_time > duration:
             if(n_sentences<=2):
                 print("2 : Minimum summarization time reached")
@@ -155,7 +163,7 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
             n_sentences -= 1
             [summary,summarizedSubtitles] = summarize(srt_file, summarizer, n_sentences, language, bonusWords, stigmaWords)
             total_time = total_duration_of_regions(summary)
-            
+
     print("************ THis is summary array *********")
     print(summary)
     print("**********************************")
@@ -170,8 +178,8 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
     for index,item in enumerate(summarizedSubtitles):
         newSubitem=pysrt.SubRipItem()
         newSubitem.index=index
-        newSubitem.text=item.text        
-        # First find duration    
+        newSubitem.text=item.text
+        # First find duration
         duration=summary[index][1]-summary[index][0]
         # Then find the ending time
         ending=starting+duration
@@ -180,14 +188,13 @@ def find_summary_regions(srt_filename, summarizer, duration, language ,bonusWord
         sub_rip_file.append(newSubitem)
         # subs.append((index,starting,ending,item.text))
         starting=ending
-    
+
     print(sub_rip_file)
-    
+
     # print(subs)
 
-    
+
     path = videonamepart+".srt"
-    print("This is the fucking path : *********************** : "+path)
     with open(path,"w+") as sf:
         for i in range(0,len(sub_rip_file)):
             sf.write(str(sub_rip_file[i]))
@@ -238,12 +245,12 @@ def summarizeVideo(videoName,subtitleName,summType,summTime,bonusWords,stigmaWor
         regions = regions[:-1]
     print("regions : ")
     print(regions)
-    
+
     summary = create_summary(video,regions)
     # Converting to video
     summary.to_videofile(
-        videoUrl, 
-        codec="libx264", 
+        videoUrl,
+        codec="libx264",
         temp_audiofile="temp.m4a",
         remove_temp=True,
         audio_codec="aac",

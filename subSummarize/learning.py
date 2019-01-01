@@ -1,8 +1,9 @@
-from .models import Weight
-from .combinedVideoGen import *
-from .videoSummarizer import *
+from main.models import Weight
+from main.combinedVideoGen import *
+from main.videoSummarizer import *
+from .videoSummarizer import dwldVideo
 
-def combined(videoName,subtitleName,dummyTxt,summTypes):
+def combined(videoDwldURL,dummyTxt,summTypes):
     print("Weighted Algorithm")
     summarizers=[]
     for item in summTypes:
@@ -11,6 +12,8 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
             summarizers.append(item)
 
     print(summarizers)
+
+    [videoName,subtitleName]=dwldVideo(videoDwldURL)
 
     videoTotSubtile=pysrt.open(subtitleName)
     clipList=list(map(srt_item_to_range,videoTotSubtile))
@@ -98,9 +101,9 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
     type_freq=[]
     for _ in summarizers:
         type_freq.append(0)
-    # print("--------------")
-    # print(MainSubtitileFrequency)
-    # print("--------------")
+    print("--------------")
+    print(MainSubtitileFrequency)
+    print("--------------")
     index=0
     for frequency in MainSubtitileFrequency:
         if(frequency!=0):
@@ -119,8 +122,8 @@ def combined(videoName,subtitleName,dummyTxt,summTypes):
     max_weight_index=type_freq.index(max(type_freq))
     min_weight_index=type_freq.index(min(type_freq))
     ## update weight accordingly
-    weights[max_weight_index]=weights[max_weight_index]+0.005
-    weights[min_weight_index]=weights[min_weight_index]-0.005
+    weights[max_weight_index]=weights[max_weight_index]+0.05
+    weights[min_weight_index]=weights[min_weight_index]-0.05
     best=""
     worst=""
     if(max_weight_index==0):

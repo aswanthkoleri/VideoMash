@@ -77,6 +77,7 @@ def speechToText(output,regions):
             audio = r.record(source,duration=duration,offset=offset)
         WIT_API_KEY="BAVSMY4FFLS6JWCUTML7JYGVOZWA5Q4E"
         result=r.recognize_wit(audio,WIT_API_KEY)
+        print("Generated Subtitle")
         print(result)
         subtitle=((start,end),result)
         subtitles.append(subtitle)
@@ -103,11 +104,9 @@ def srt_formatter(subtitles, padding_before=0, padding_after=0):
 
 def splitAudio(audioFile):
     audio=AudioSegment.from_wav(audioFile)
-    print("doe")
     chunks = split_on_silence(audio,
     silence_thresh=-16
     )
-    print("Done1")
     for i, chunk in enumerate(chunks):
         #Normalize each audio chunk
         normalized_chunk = match_target_amplitude(chunk, -20.0)
