@@ -1,0 +1,14 @@
+
+Hope you enjoy your new logo, here are the people that
+made your beautiful logo happen :)
+
+font name: Rex Bold Inline
+font link: https://www.fontsquirrel.com/license/rex
+font author: Fontfabric
+font author site: http://www.fontfabric.com/
+
+icon designer: iconsmind.com
+icon designer link: /imicons
+        
+{"bg":"#ffffff","icon-gradient-0":"#2F8632","icon-gradient-1":"#BEFF7F","font":"#000000"}
+      

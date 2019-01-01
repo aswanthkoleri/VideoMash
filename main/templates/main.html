@@ -1,3 +1,4 @@
+{% load static %}
 {% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +11,7 @@
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <style>
     .form-start {
-        margin-top : 10px;
+        margin-top : 30px;
     }
     .submit-button {
         margin-top: 20px;
@@ -39,7 +40,8 @@
         <div class="navbar-item hero-body">
             <div class="container">
                 <h1 class="title">
-                  Video summarizer
+                  <img src="{% static "main/logo/icon-left-font-monochrome-white.svg" %}>
+
                 </h1>
                 <h2 class="subtitle">
                   Summarize your video to any length.
@@ -47,31 +49,31 @@
             </div>
         </div>
     </div>
-    <div class="navbar-end">
+    <!-- <div class="navbar-end">
         <a class="navbar-item">Summarize from Video URL</a>
-    </div>
+    </div> -->
     </section> {% endcomment %}
     <!-- Navbar end -->
 <nav class="navbar">
-  <div class="navbar-menu hero is-dark">
+  <div class="navbar-menu hero is-success">
 
     <div class="navbar-start">
         <div class="navbar-item hero-body">
             <div class="container">
-                <h1 class="title">
-                  Video summarizer
+                <h1 class="title is-1">
+                        <img src="{% static "videoSummarizer/logo/icon-left-font-monochrome-white.svg" %}" >
                 </h1>
                 <h2 class="subtitle">
-                  Summarize your video to any length.
+                        Summarize your video to any duration.
                 </h2>
             </div>
         </div>
     </div>
 
     <div class="navbar-end">
-      <div class="navbar-item">
+      <!-- <div class="navbar-item">
             <a class="button is-success" href="/subSummarize" >Summarize from VideoURL</a>
-      </div>
+      </div> -->
     </div>
 
   </div>
@@ -83,7 +85,7 @@
     
                 {% csrf_token %}
                 {% comment %} {% for field in form.visible_fields %} {% endcomment %}
-               <div class="box">
+               <div class="box form-start">
                    <div class="message is-success">
                     <div class="message-header ">
                         <p>Upload video and subtitles</p>
