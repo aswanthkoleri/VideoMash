@@ -1,6 +1,9 @@
+<img src="static/videoSummarizer/logo/icon-left-font.png" width = "450" height= "200">
+<br>
+
 # What it does?
 
-Well, VideoMash is a video summarizer where in you can upload any video from local system or can provide the YouTube URL for your video to summarize it into any duration which you provide as input. Summarization is done using NLP algorithms which is used to analyze the subtitles of the video to extract the important parts. 
+VideoMash is a video summarizer where in you can upload any video from local system or can provide the YouTube URL for your video to summarize it into any duration which you provide as input. Summarization is done using NLP algorithms which is used to analyze the subtitles of the video to extract the important parts. 
 
 # Features
 - Summarize using upload option
@@ -35,5 +38,15 @@ Well, VideoMash is a video summarizer where in you can upload any video from loc
 
 ![screenshot2](screenshots/2.png)
 
+![screenshot3](screenshots/3.png)
+
+# Demo 
+
+Watch the Demo video click the image below.
+
+# Contributions
+If you find any issues do raise it and your contributions will be accepted if it makes the web app preform better. 
+
 # Warning
  When you push any changes to the repo, ***dont forget to delete all the files in the directory /media/documents/*** where all the uploaded videos and subititle are stored.
+
