@@ -1,4 +1,4 @@
-<img src="static/videoSummarizer/logo/icon-left-font.png" width = "450" height= "200">
+<img src="static/videoSummarizer/logo/readme-icon.png" width = "650" height= "200">
 <br>
 
 # What it does?
