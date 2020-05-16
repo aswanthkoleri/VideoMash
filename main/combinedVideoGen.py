@@ -185,18 +185,18 @@ def createComVideo(videoName,subtitleName,dummyTxt,summTypes):
         summary = create_summary(videoName,combRegions)
 
         # #Converting to video
-        # base, ext = os.path.splitext(videoName)
-        # dst = "{0}_".format(base)
-        # dst = dst+"_combined.mp4"
-        # print("dst : "+str(dst))
-        # summary.to_videofile(
-        #     dst,
-        #     codec="libx264",
-        #     temp_audiofile="temp.m4a",
-        #     remove_temp=True,
-        #     audio_codec="aac",
-        # )
-        dst="blah"
+        base, ext = os.path.splitext(videoName)
+        dst = "{0}_".format(base)
+        dst = dst+"_combined.mp4"
+        print("dst : "+str(dst))
+        summary.to_videofile(
+             dst,
+             codec="libx264",
+             temp_audiofile="temp.m4a",
+             remove_temp=True,
+             audio_codec="aac",
+         )
+        #dst="res"
         return dst,combSubtitleName
     else:
         print("cannot extract any regions!")
