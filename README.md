@@ -17,13 +17,16 @@ Read medium article : [Video summarizer made easy](https://medium.com/@aswanthka
 - Easy to use
 
 # How to fire it up? 
-
+- conda create -n VideoSmash
+- conda install pip
 - Gotta imstall the requirements first
 
 ``` pip install -r requirements.txt```
+- If pip install do not work then install library without specifying the version
 
 - Now run the server
-
+```python manage.py makemigrations```
+```python manage.py migrate```
 ```python manage.py runserver```
 
 - The web app is up and running on [localhost:8000](https://localhost:8000/)
